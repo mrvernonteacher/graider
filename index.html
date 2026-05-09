@@ -561,7 +561,7 @@
             e.target.value = ""; 
         });
 
-        // --- NEW AI AUTO-BUILD LISTENER ---
+// --- NEW AI AUTO-BUILD LISTENER ---
         document.getElementById('autoBuildFile').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -591,18 +591,21 @@
                     let cleanJson = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
                     const newRubric = JSON.parse(cleanJson);
 
-                    if (newRubric && newRubric.criteria) {
+                    // SURFACING THE REAL ERROR:
+                    if (newRubric && newRubric.error) {
+                        throw new Error("Google Script says: " + newRubric.error);
+                    } else if (newRubric && newRubric.criteria) {
                         currentRubric = newRubric;
                         clearGrades();
                         updateMaxScore();
                         renderRubric();
                         alert("Rubric successfully generated!");
                     } else {
-                        throw new Error("Invalid format returned by AI.");
+                        throw new Error("AI missed the format. It replied with: " + rawResponse.substring(0, 150));
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Failed to parse rubric. Ensure the file is a clear PDF or Image. Error: " + err.message);
+                    alert("Auto-Build Failed!\n\n" + err.message);
                 } finally {
                     document.getElementById('loadingOverlay').style.display = 'none';
                     e.target.value = ''; // Reset input
