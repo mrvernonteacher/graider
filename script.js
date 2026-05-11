@@ -173,7 +173,6 @@ function toggleSetup() {
     const btn = document.getElementById('btnSetup');
     
     isSetupOpen = !isSetupOpen;
-    isEditMode = isSetupOpen; 
     
     setupRot += 180;
     icon.style.transform = `rotate(${setupRot}deg)`;
@@ -182,27 +181,40 @@ function toggleSetup() {
     const overallContainer = document.getElementById('overallCommentsContainer');
 
     if (isSetupOpen) {
-        wrapper.classList.remove('collapsed'); wrapper.classList.add('open'); btn.classList.add('active');
+        // Open the menu and FORCE Edit Mode ON
+        isEditMode = true;
         
-        if (!isEditMode) {
-            isEditMode = true;
-            addContainer.style.display = 'block';
-            overallContainer.style.display = 'none';
-            renderRubric();
-        }
+        wrapper.classList.remove('collapsed'); 
+        wrapper.classList.add('open'); 
+        btn.classList.add('active');
+        
+        addContainer.style.display = 'block';
+        overallContainer.style.display = 'none';
+        
+        // Show Edit elements, hide Grade elements
+        document.querySelectorAll('.edit-only').forEach(el => el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex');
+        document.querySelectorAll('.grade-only').forEach(el => el.style.display = 'none');
 
         if (isAIOpen) toggleAI(); 
     } else {
-        wrapper.classList.add('collapsed'); wrapper.classList.remove('open'); btn.classList.remove('active');
+        // Close the menu and FORCE Edit Mode OFF
+        isEditMode = false;
         
-        if (isEditMode) {
-            isEditMode = false;
-            addContainer.style.display = 'none';
-            overallContainer.style.display = 'block';
-            updateMaxScore();
-            renderRubric();
-        }
+        wrapper.classList.add('collapsed'); 
+        wrapper.classList.remove('open'); 
+        btn.classList.remove('active');
+        
+        addContainer.style.display = 'none';
+        overallContainer.style.display = 'block';
+        
+        // Hide Edit elements, show Grade elements
+        document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.grade-only').forEach(el => el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex');
+        
+        updateMaxScore();
     }
+    
+    renderRubric();
     handleScrollForFloatBtn();
 }
 
@@ -371,18 +383,14 @@ function init() {
         reader.onload = function(e) {
             try { 
                 currentRubric = JSON.parse(e.target.result); 
-                clearGrades(); 
-                updateMaxScore(); 
                 
-                // Force exit edit mode and visually close the Setup menu if it was open
+                // If Setup is open, automatically close it (which perfectly toggles all buttons/modes back to normal)
                 if (isSetupOpen) {
                     toggleSetup(); 
-                } else {
-                    isEditMode = false;
-                    document.getElementById('addCriterionContainer').style.display = 'none';
-                    document.getElementById('overallCommentsContainer').style.display = 'block';
-                    renderRubric();
-                }
+                } 
+                
+                clearGrades(); 
+                updateMaxScore(); 
             } 
             catch (err) { alert('Error parsing Rubric JSON file.'); }
         }; reader.readAsText(file); e.target.value = ""; 
@@ -505,7 +513,7 @@ async function processSingleBatchFile(file) {
                     let totalScore = 0; for (let key in batchScores) { totalScore += batchScores[key]; }
 
                     let safeStudent = bestName.replace(/[^a-z0-9\s]/gi, '_').trim(); let safeProject = (currentRubric.title || "Project").replace(/[^a-z0-9\s]/gi, '_').trim();
-                    let jsonFilename = `${safeStudent} - ${safeProject}.json`; let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
+                    let jsonFilename = `${safeStudent} - ${safeProject}.json`; let reportFilename = `${safeStudent} - ${safeProject}.html`;
 
                     const exportData = { type: "StudentGradeRecord", studentName: bestName, projectTitle: currentRubric.title, rubric: currentRubric, scores: batchScores, comments: batchComments, overallComment: "", isGraded: batchGraded };
                     const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -838,7 +846,7 @@ async function exportStudentDataAndReport() {
     let totalScore = document.getElementById('totalScore').innerText;
 
     let jsonFilename = `${safeStudent} - ${safeProject}.json`;
-    let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
+    let reportFilename = `${safeStudent} - ${safeProject}.html`;
 
     const exportData = { type: "StudentGradeRecord", studentName: studentName, projectTitle: projectTitle, rubric: currentRubric, scores: scores, comments: comments, overallComment: overallComment, isGraded: isGraded };
     const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
