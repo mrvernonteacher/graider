@@ -242,7 +242,7 @@
         .red-scheme-box:focus { outline: none; box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.15); }
         [data-theme="dark"] .red-scheme-box { background: rgba(248, 113, 113, 0.05); border-color: #f87171; }
         
-        .save-status { font-size: 0.85em; font-weight: bold; color: var(--text-light); margin-left: auto; padding: 4px 10px; border-radius: 4px; background: var(--input-bg); border: 1px solid var(--border); display: flex; align-items: center; gap: 4px;}
+        .save-status { font-size: 0.85em; font-weight: bold; color: var(--text-light); padding: 4px 10px; border-radius: 4px; background: var(--input-bg); border: 1px solid var(--border); display: flex; align-items: center; gap: 4px;}
         .save-status.active { color: var(--primary); border-color: var(--primary); background: rgba(0, 47, 108, 0.05); }
         [data-theme="dark"] .save-status.active { color: #60a5fa; border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
 
@@ -333,7 +333,7 @@
             display: flex; align-items: center; gap: 8px; font-family: inherit;
         }
         #smartFillBtn.visible { bottom: 40px; opacity: 1; }
-        #smartFillBtn:hover { transform: translateY(-3px) scale(1.02); background-color: var(--success); }
+        #smartFillBtn:hover { transform: translateY(-3px) scale(1.02); background-color: var(--primary); }
         [data-theme="dark"] #smartFillBtn { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
         [data-theme="dark"] #smartFillBtn:hover { background-color: rgba(16, 185, 129, 0.3); }
 
@@ -458,7 +458,7 @@
             <div class="panel-inner">
                 <div class="panel-content">
                     <div class="controls-row" style="justify-content: center;">
-                        <button class="btn" onclick="selectSaveDirectory()" title="Set Master Folder for auto-saving"><span class="material-symbols-outlined">create_new_folder</span> Set Save Folder</button>
+                        <button class="btn btn-info" onclick="selectSaveDirectory()" title="Set Master Folder for auto-saving"><span class="material-symbols-outlined">create_new_folder</span> Set Save Folder</button>
                         <span id="saveStatus" class="save-status"><span class="material-symbols-outlined" style="font-size: 1.1em;">folder_off</span> No folder</span>
                         
                         <label class="btn btn-warning" for="autoBuildFile" title="Auto-Build Rubric (PDF/Image)"><span class="material-symbols-outlined">auto_fix_high</span> Auto-Build</label>
@@ -729,11 +729,11 @@
         if (isSetupOpen) {
             wrapper.classList.remove('collapsed'); wrapper.classList.add('open'); btn.classList.add('active');
             
+            // Automatically enter edit mode when Setup opens
             if (!isEditMode) {
                 isEditMode = true;
                 document.getElementById('addCriterionContainer').style.display = 'block';
                 document.getElementById('overallCommentsContainer').style.display = 'none';
-                document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'inline-flex');
                 renderRubric();
             }
 
@@ -741,11 +741,11 @@
         } else {
             wrapper.classList.add('collapsed'); wrapper.classList.remove('open'); btn.classList.remove('active');
             
+            // Automatically exit edit mode when Setup closes
             if (isEditMode) {
                 isEditMode = false;
                 document.getElementById('addCriterionContainer').style.display = 'none';
                 document.getElementById('overallCommentsContainer').style.display = 'block';
-                document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
                 updateMaxScore();
                 renderRubric();
             }
