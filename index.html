@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="walgraderfavicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
 
     <style>
         /* Walton Engineering Variables (Light) */
@@ -52,7 +53,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
             background-color: var(--bg);
@@ -73,121 +74,72 @@
         }
 
         .watermark-layer {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            overflow: hidden;
-            pointer-events: none;
-            border-radius: var(--radius);
-            z-index: 0;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden; pointer-events: none; border-radius: var(--radius); z-index: 0;
         }
 
         .watermark-layer::before {
-            content: "";
-            position: absolute;
-            top: 0px; 
-            right: 0px;
-            width: 450px;
-            height: 450px;
-            background-image: url('WalEngNoBG.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: top right;
-            opacity: 0.10;
-            pointer-events: none;
+            content: ""; position: absolute; top: 0px; right: 0px; width: 450px; height: 450px;
+            background-image: url('WalEngNoBG.png'); background-size: contain;
+            background-repeat: no-repeat; background-position: top right;
+            opacity: 0.10; pointer-events: none;
         }
 
-        [data-theme="dark"] .watermark-layer::before {
-            opacity: 0.15;
-            filter: grayscale(100%) brightness(1.5);
-        }
+        [data-theme="dark"] .watermark-layer::before { opacity: 0.15; filter: grayscale(100%) brightness(1.5); }
+        
+        /* --- ICONS --- */
+        .material-symbols-outlined { font-size: 1.2em; display: inline-block; vertical-align: middle; }
         
         .sticky-top {
             position: sticky; top: 0; background: var(--header-bg); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             z-index: 1000; padding-top: 30px; padding-bottom: 15px; border-bottom: 2px solid var(--primary);
-            margin-bottom: 30px;
-            transition: background-color 0.3s;
+            margin-bottom: 30px; transition: background-color 0.3s;
         }
 
-        #projectTitleContainer, .header, .ai-instruction-box, .controls, .rubric-table, #overallCommentsContainer { 
-            position: relative; 
-            z-index: 1; 
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+            position: relative; z-index: 2;
         }
 
         #projectTitleContainer { text-align: left; }
         #projectTitleContainer h1 { margin: 0; font-size: 2.2em; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; }
         [data-theme="dark"] #projectTitleContainer h1 { color: var(--primary); }
 
-        /* --- UI COLLAPSE STYLES --- */
-        .title-row {
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
-        }
-        .gear-icon {
-            display: inline-block;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-settings {
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+
+        /* --- COLLAPSIBLE PANELS --- */
+        .btn-nav {
             background-color: transparent; color: var(--primary); border: 1px solid var(--primary);
             padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer;
             transition: all 0.2s; font-family: inherit; font-size: 0.95em;
+            display: inline-flex; align-items: center; gap: 6px;
         }
-        .btn-settings:hover { background-color: var(--primary); color: white; }
-        [data-theme="dark"] .btn-settings { color: #93c5fd; border-color: #93c5fd; }
-        [data-theme="dark"] .btn-settings:hover { background-color: rgba(96, 165, 250, 0.15); }
-
-        .settings-wrapper {
-            display: grid; grid-template-rows: 1fr;
-            transition: grid-template-rows 0.4s ease-out, opacity 0.3s ease-out, margin 0.4s ease-out;
-            opacity: 1; margin-bottom: 15px;
-        }
-        .settings-wrapper.collapsed {
-            grid-template-rows: 0fr; opacity: 0; margin-bottom: 0; pointer-events: none;
-        }
-        .settings-inner { overflow: hidden; }
-
-        .header {
-            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.4); 
-            padding: 15px 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); border: 1px solid var(--border);
-            transition: background 0.3s, border-color 0.3s;
-        }
+        .btn-nav.active, .btn-nav:hover { background-color: var(--primary); color: white; }
+        .btn-nav.icon-only { padding: 8px; }
         
-        .header-left { display: flex; flex-direction: column; gap: 10px; width: 60%; }
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 15px; min-width: 250px; }
-        
-        .student-info { display: flex; align-items: center; gap: 12px; font-size: 1.05em; font-weight: bold; }
-        .student-info input {
-            padding: 8px 12px; font-size: 0.95em; width: 300px;
-            border: 1px solid var(--border); border-radius: 4px;
-            font-family: inherit; transition: all 0.2s;
-            background: var(--input-bg); color: var(--text-dark);
-        }
-        .student-info input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1); }
-        [data-theme="dark"] .student-info input:focus { box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2); }
+        [data-theme="dark"] .btn-nav { color: #93c5fd; border-color: #93c5fd; }
+        [data-theme="dark"] .btn-nav.active, [data-theme="dark"] .btn-nav:hover { background-color: rgba(96, 165, 250, 0.15); }
 
-        .ai-instruction-box { display: flex; flex-direction: column; gap: 4px; }
-        .ai-instruction-box label { font-size: 0.85em; font-weight: bold; color: var(--text-light); }
-        .ai-instruction-box textarea {
-            padding: 8px; font-size: 0.9em; width: 100%; height: 45px; resize: vertical;
-            border: 1px solid var(--border); border-radius: 4px;
-            font-family: inherit; transition: all 0.2s; background: var(--input-bg); color: var(--text-dark);
-        }
-        #learnedRulesInput { height: 80px; font-family: monospace; background: rgba(0, 47, 108, 0.03); border-color: var(--secondary); }
-        [data-theme="dark"] #learnedRulesInput { background: rgba(96, 165, 250, 0.05); }
+        .anim-icon { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .score-display { font-size: 1.4em; font-weight: 600; color: var(--text-light); text-align: right; }
-        #totalScore { color: var(--primary); font-weight: 700; font-size: 1.2em; }
-
-        .controls {
-            display: flex; flex-wrap: wrap; gap: 10px; 
-            background: rgba(255, 255, 255, 0.4); 
-            padding: 12px 20px;
-            border-radius: var(--radius); align-items: center; border: 1px solid var(--border); box-shadow: var(--shadow);
-            transition: background 0.3s, border-color 0.3s;
+        .collapsible-panel {
+            display: grid; grid-template-rows: 0fr; opacity: 0; margin-bottom: 0; pointer-events: none;
+            transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease-out, margin 0.3s ease-out;
+            position: relative; z-index: 2;
         }
+        .collapsible-panel.open { grid-template-rows: 1fr; opacity: 1; margin-bottom: 15px; pointer-events: auto; }
+        .panel-inner { overflow: hidden; padding: 0 4px; }
+        .panel-content {
+            background: rgba(255, 255, 255, 0.6); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 15px; box-shadow: var(--shadow);
+            display: flex; flex-direction: column; gap: 15px; margin-top: 5px; margin-bottom: 5px;
+        }
+        [data-theme="dark"] .panel-content { background: rgba(30, 30, 30, 0.85); border-color: #555; }
+
+        /* --- BUTTONS --- */
+        .controls-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
         
         button, label.btn {
             padding: 8px 14px; background-color: var(--secondary); color: white;
@@ -195,42 +147,76 @@
             font-family: inherit; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;
             transition: all 0.2s; margin: 0;
         }
-        button:hover, label.btn:hover { background-color: var(--primary); transform: translateY(-1px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
-        [data-theme="dark"] button:not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-purple):not(.btn-darkred):not(.btn-settings) { 
+        button:hover, label.btn:hover { background-color: var(--primary); transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; transform: none; box-shadow: none; }
+        
+        [data-theme="dark"] button:not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-purple):not(.btn-darkred):not(.btn-nav) { 
             background-color: var(--input-bg); border: 1px solid var(--border); color: var(--text-dark); 
         }
-        [data-theme="dark"] button:hover:not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-purple):not(.btn-darkred):not(.btn-settings) { 
-            background-color: var(--border); 
+        [data-theme="dark"] label.btn:not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-purple):not(.btn-darkred):not(.btn-nav) { 
+            background-color: var(--input-bg); border: 1px solid var(--border); color: var(--text-dark); 
         }
+        [data-theme="dark"] button:hover:not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-purple):not(.btn-darkred):not(.btn-nav) { background-color: var(--border); }
+        [data-theme="dark"] label.btn:hover:not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-purple):not(.btn-darkred):not(.btn-nav) { background-color: var(--border); }
         
         .btn-success { background-color: var(--primary); color: white;}
         [data-theme="dark"] .btn-success { background-color: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.3); }
         .btn-danger { background-color: var(--walton-red); color: white;}
         [data-theme="dark"] .btn-danger { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
-        .btn-warning { background-color: var(--walton-red); color: white; }
-        [data-theme="dark"] .btn-warning { background-color: rgba(248, 113, 113, 0.15); color: #fca5a5; border-color: rgba(248, 113, 113, 0.3); }
+        .btn-warning { background-color: var(--warning); color: white; }
+        [data-theme="dark"] .btn-warning { background-color: rgba(245, 158, 11, 0.15); color: #fcd34d; border-color: rgba(245, 158, 11, 0.3); }
         .btn-info { background-color: var(--secondary); color: white;}
         .btn-purple { background-color: #8e44ad; color: white; }
         [data-theme="dark"] .btn-purple { background-color: rgba(168, 85, 247, 0.15); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
         .btn-darkred { background-color: #900c3f; color: white; }
         [data-theme="dark"] .btn-darkred { background-color: rgba(225, 29, 72, 0.15); color: #fda4af; border: 1px solid rgba(225, 29, 72, 0.3); }
         
-        .theme-toggle { margin-left: auto; background-color: #34495e; padding: 8px 10px; }
-        [data-theme="dark"] .theme-toggle { background-color: var(--card-bg); }
-        
         .btn-small { padding: 4px 8px; font-size: 12px; margin-top: 5px; }
         .btn-icon { padding: 4px 8px; font-size: 14px;}
-        
         input[type="file"] { display: none; }
+        
         .edit-only { display: none; }
         .grade-only { display: inline-block; }
         
-        .save-status { font-size: 0.85em; font-weight: bold; color: var(--text-light); margin-left: 10px; padding: 4px 10px; border-radius: 4px; background: var(--input-bg); border: 1px solid var(--border); }
+        /* --- MAIN HEADER --- */
+        .main-grading-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.5); padding: 15px 20px; border-radius: var(--radius);
+            box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; z-index: 1;
+        }
+        [data-theme="dark"] .main-grading-header { background: rgba(30, 30, 30, 0.85); border-color: #555; }
+        
+        .student-info { display: flex; align-items: center; gap: 12px; font-size: 1.05em; font-weight: bold; width: 60%; }
+        .student-info input {
+            padding: 10px 14px; font-size: 1em; width: 100%; max-width: 400px;
+            border: 1px solid var(--border); border-radius: 4px; font-family: inherit; transition: all 0.2s;
+            background: var(--input-bg); color: var(--text-dark);
+        }
+        .student-info input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1); }
+        [data-theme="dark"] .student-info input:focus { box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2); }
+
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .score-display { font-size: 1.4em; font-weight: 600; color: var(--text-light); text-align: right; }
+        #totalScore { color: var(--primary); font-weight: 700; font-size: 1.2em; }
+
+        /* --- AI TEXT AREAS --- */
+        .ai-instruction-box { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+        .ai-instruction-box label { font-size: 0.85em; font-weight: bold; color: var(--text-light); display: flex; align-items: center; gap: 5px; }
+        .ai-instruction-box textarea {
+            padding: 10px; font-size: 0.9em; width: 100%; resize: vertical; box-sizing: border-box;
+            border: 1px solid var(--border); border-radius: 4px;
+            font-family: inherit; transition: all 0.2s; background: var(--input-bg); color: var(--text-dark);
+        }
+        #aiPromptInput { height: 50px; }
+        #learnedRulesInput { height: 80px; font-family: monospace; background: rgba(0, 47, 108, 0.03); border-color: var(--secondary); }
+        [data-theme="dark"] #learnedRulesInput { background: rgba(96, 165, 250, 0.05); }
+        
+        .save-status { font-size: 0.85em; font-weight: bold; color: var(--text-light); margin-left: auto; padding: 4px 10px; border-radius: 4px; background: var(--input-bg); border: 1px solid var(--border); display: flex; align-items: center; gap: 4px;}
         .save-status.active { color: var(--primary); border-color: var(--primary); background: rgba(0, 47, 108, 0.05); }
         [data-theme="dark"] .save-status.active { color: #60a5fa; border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
 
-        .rubric-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-bottom: 30px; table-layout: fixed; }
+        /* --- RUBRIC TABLE --- */
+        .rubric-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-bottom: 30px; table-layout: fixed; position: relative; z-index: 1;}
         .rubric-table th, .rubric-table td { padding: 12px 16px; vertical-align: top; word-wrap: break-word; }
         
         .criterion-title {
@@ -246,12 +232,12 @@
             border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
             position: relative;
         }
-        .level-cell:hover:not(.edit-mode) { background-color: var(--light); z-index: 10; }
+        .level-cell:hover:not(.edit-mode) { background-color: var(--light); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: scale(1.01); }
+        [data-theme="dark"] .level-cell:hover:not(.edit-mode) { box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 
         .level-cell.selected:not(.edit-mode) {
             background-color: rgba(0, 47, 108, 0.03); border: 1px solid var(--primary);
-            border-left: 1px solid var(--primary); 
-            z-index: 20; box-shadow: inset 0 0 0 1px var(--primary);
+            border-left: 1px solid var(--primary); z-index: 20; box-shadow: inset 0 0 0 1px var(--primary);
         }
         [data-theme="dark"] .level-cell.selected:not(.edit-mode) { 
             background-color: rgba(96, 165, 250, 0.08); border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary);
@@ -273,8 +259,7 @@
         .score-input {
             width: 60px; padding: 6px; font-size: 1.1em; text-align: center;
             border: 1px solid var(--border); border-radius: 4px; font-weight: bold;
-            font-family: inherit; color: var(--primary); transition: all 0.2s;
-            background: var(--input-bg);
+            font-family: inherit; color: var(--primary); transition: all 0.2s; background: var(--input-bg);
         }
         .score-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1); }
         [data-theme="dark"] .score-input:focus { box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2); }
@@ -287,7 +272,7 @@
         .comments-input:focus { outline: none; border-color: var(--primary); border-style: solid; box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1); }
         [data-theme="dark"] .comments-input:focus { box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2); }
 
-        #overallCommentsContainer { margin-top: 10px; padding-top: 10px; }
+        #overallCommentsContainer { margin-top: 10px; padding-top: 10px; position: relative; z-index: 1;}
         #overallCommentsContainer h3 { color: var(--primary); margin-top: 0; margin-bottom: 10px; font-size: 1.1em; }
 
         .edit-input, .edit-textarea {
@@ -300,9 +285,7 @@
         .edit-pts { width: 60px; font-weight: bold; color: var(--walton-red); }
         .move-controls { display: flex; gap: 4px; margin-top: 8px; }
 
-        [data-theme="dark"] .header { background: rgba(30, 30, 30, 0.85); border-color: #555; }
-        [data-theme="dark"] .controls { background: rgba(30, 30, 30, 0.85); border-color: #555; }
-
+        /* --- LOADING & MODALS --- */
         #loadingOverlay {
             display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(5px); z-index: 9999;
@@ -323,7 +306,6 @@
         [data-theme="dark"] #smartFillBtn { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
         [data-theme="dark"] #smartFillBtn:hover { background-color: rgba(16, 185, 129, 0.3); }
 
-        /* --- TEACH AI MODAL CSS --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(3px);
@@ -332,10 +314,10 @@
             background: var(--card-bg); padding: 30px; border-radius: var(--radius);
             width: 600px; max-width: 90%; box-shadow: var(--shadow); border: 1px solid var(--border); text-align: left;
         }
-        .modal-content h3 { margin-top: 0; color: var(--primary); }
+        .modal-content h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 8px;}
         .drop-zone {
             border: 2px dashed var(--primary); padding: 15px; text-align: center; border-radius: var(--radius); cursor: pointer;
-            transition: all 0.2s; background: var(--input-bg); color: var(--text-dark); font-weight: bold; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; background: var(--input-bg); color: var(--text-dark); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;
             min-height: 60px; word-break: break-word; font-size: 0.9em;
         }
         .drop-zone.dragover { background: rgba(0, 47, 108, 0.1); transform: scale(1.02); }
@@ -356,19 +338,21 @@
             body { padding: 10px; }
             .container { padding: 0 15px 20px 15px; }
             .sticky-top { position: relative; padding-top: 15px; }
-            .header { flex-direction: column; align-items: stretch; text-align: center; gap: 10px; padding: 12px; }
-            .header-left { width: 100%; }
-            .header-right { width: 100%; align-items: stretch !important; margin-top: 5px;}
-            .student-info { flex-direction: column; align-items: stretch; }
-            .student-info input { width: 100%; box-sizing: border-box; }
-            .score-display { margin-top: 5px; text-align: center; }
+            .top-nav { flex-direction: column; align-items: stretch; gap: 10px; }
+            .nav-buttons { justify-content: space-between; }
+            .main-grading-header { flex-direction: column; align-items: stretch; gap: 15px; }
+            .student-info { width: 100%; flex-direction: column; align-items: stretch; }
+            .student-info input { max-width: 100%; }
+            .header-right { flex-direction: column; align-items: stretch; gap: 10px; }
+            .score-display { text-align: center; }
             
-            .controls { flex-direction: column; align-items: stretch; text-align: center; gap: 10px; padding: 12px; justify-content: center; }
+            .controls-row { justify-content: center; }
             .btn-separator { display: none; } 
-            .controls button, .controls label.btn, .save-status { 
-                width: 100%; margin-left: 0 !important; padding: 12px; font-size: 1em;
-                box-sizing: border-box; display: flex; justify-content: center; align-items: center;
+            .controls-row button, .controls-row label.btn { 
+                width: 100%; margin-left: 0 !important; padding: 12px; font-size: 1em; justify-content: center;
             }
+            .save-status { width: 100%; justify-content: center; box-sizing: border-box; margin: 0; }
+            
             .rubric-table th, .rubric-table td { padding: 10px 4px; }
             .criterion-title { width: 30%; font-size: 0.85em; }
             .score-cell { width: 70px; }
@@ -393,22 +377,22 @@
 
 <div id="teachModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>🧠 Teach AI: The Training Cart</h3>
+        <h3><span class="material-symbols-outlined">psychology</span> Teach AI: The Training Cart</h3>
         <p style="font-size: 0.9em; color: var(--text-light); margin-bottom: 20px;">Provide a student's document and their graded JSON. The app will pair them automatically. Build up a batch, then click Start Learning!</p>
         
         <div class="drop-zone-container" style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <div id="dropZoneDoc" class="drop-zone" style="flex: 1;">📄 1. Drop Document</div>
+            <div id="dropZoneDoc" class="drop-zone" style="flex: 1;"><span class="material-symbols-outlined">description</span> 1. Drop Document</div>
             <input type="file" id="teachDocInput" accept=".pdf, .png, .jpg, .jpeg">
 
-            <div id="dropZoneJson" class="drop-zone" style="flex: 1;">📊 2. Drop JSON</div>
+            <div id="dropZoneJson" class="drop-zone" style="flex: 1;"><span class="material-symbols-outlined">data_object</span> 2. Drop JSON</div>
             <input type="file" id="teachJsonInput" accept=".json">
         </div>
 
         <div id="teachQueueContainer" class="queue-container"></div>
 
         <div style="display: flex; justify-content: space-between; gap: 10px;">
-            <button class="btn-danger" style="width:100%" onclick="closeTeachModal()">Cancel</button>
-            <button id="startTeachBtn" class="btn-success" style="width:100%" disabled onclick="executeTeachAI()">Start Learning (0 Pairs)</button>
+            <button class="btn-danger" style="width:100%" onclick="closeTeachModal()"><span class="material-symbols-outlined">close</span> Cancel</button>
+            <button id="startTeachBtn" class="btn-success" style="width:100%" disabled onclick="executeTeachAI()"><span class="material-symbols-outlined">school</span> Start Learning (0 Pairs)</button>
         </div>
     </div>
 </div>
@@ -418,70 +402,86 @@
 
     <div class="sticky-top">
         
-        <div class="title-row">
+        <div class="top-nav">
             <div id="projectTitleContainer"></div>
-            <button class="btn-settings" onclick="toggleSettings()" title="Toggle Setup & Settings">
-                <span id="gearIcon" class="gear-icon">⚙️</span> <span class="hide-mobile">Settings</span>
-            </button>
+            <div class="nav-buttons">
+                <button id="btnSetup" class="btn-nav" onclick="toggleSetup()" title="Toggle Setup & Settings">
+                    <span id="gearIcon" class="material-symbols-outlined anim-icon">settings</span> <span class="hide-mobile">Setup</span>
+                </button>
+                <button id="btnAI" class="btn-nav" onclick="toggleAI()" title="Toggle AI Engine Tools">
+                    <span id="robotIcon" class="material-symbols-outlined anim-icon">smart_toy</span> <span class="hide-mobile">AI Engine</span>
+                </button>
+                <button class="btn-nav icon-only" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                    <span id="themeIcon" class="material-symbols-outlined">dark_mode</span>
+                </button>
+            </div>
         </div>
 
-        <div id="settingsWrapper" class="settings-wrapper open">
-            <div class="settings-inner">
-                <div class="controls">
-                    <button id="toggleEditBtn" class="btn-warning" onclick="toggleEditMode()" title="Enter Edit Mode">✏️ Edit</button>
-                    <span class="btn-separator" style="border-left: 2px solid var(--border); height: 30px; margin: 0 10px;"></span>
-                    
-                    <label class="btn btn-purple grade-only" for="autoGradeFile" title="Have AI Grade Student PDFs (Review One-by-One)">🤖 AI Grade</label>
-                    <input type="file" id="autoGradeFile" accept=".pdf, .png, .jpg, .jpeg" multiple>
+        <div id="setupWrapper" class="collapsible-panel collapsed">
+            <div class="panel-inner">
+                <div class="panel-content">
+                    <div class="controls-row">
+                        <button id="toggleEditBtn" class="btn-warning" onclick="toggleEditMode()" title="Enter Edit Mode"><span class="material-symbols-outlined">edit</span> Edit Rubric</button>
+                        <span class="btn-separator" style="border-left: 2px solid var(--border); height: 30px; margin: 0 10px;"></span>
+                        
+                        <label class="btn btn-info grade-only" for="loadStudentFile" title="Load a previously saved student grade"><span class="material-symbols-outlined">folder_open</span> Load Student</label>
+                        <input type="file" id="loadStudentFile" accept=".json">
+                        
+                        <button class="btn grade-only" onclick="selectSaveDirectory()" title="Set Master Folder for auto-saving"><span class="material-symbols-outlined">create_new_folder</span> Set Save Folder</button>
+                        <span id="saveStatus" class="save-status grade-only"><span class="material-symbols-outlined" style="font-size: 1.1em;">folder_off</span> No folder</span>
+                        
+                        <label class="btn btn-warning edit-only" for="autoBuildFile" style="margin-left: auto;" title="Auto-Build Rubric (PDF/Image)"><span class="material-symbols-outlined">auto_fix_high</span> Auto-Build</label>
+                        <input type="file" id="autoBuildFile" accept=".pdf, .png, .jpg, .jpeg">
 
-                    <label class="btn btn-darkred grade-only" for="batchGradeFile" title="Silent Batch Auto-Grade directly to Folder">🚀 Batch</label>
-                    <input type="file" id="batchGradeFile" accept=".pdf, .png, .jpg, .jpeg" multiple>
-
-                    <label class="btn btn-info grade-only" for="loadStudentFile" title="Load Student Data">📂 Load</label>
-                    <input type="file" id="loadStudentFile" accept=".json">
-                    
-                    <button class="btn grade-only" onclick="selectSaveDirectory()" title="Set Save Folder">📁 Save</button>
-                    <span id="saveStatus" class="save-status grade-only">No folder</span>
-                    
-                    <button id="themeToggleBtn" class="btn theme-toggle grade-only" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
-                    
-                    <label class="btn btn-warning edit-only" for="autoBuildFile" style="margin-left: auto;" title="Auto-Build Rubric (PDF/Image)">✨ Auto-Build</label>
-                    <input type="file" id="autoBuildFile" accept=".pdf, .png, .jpg, .jpeg">
-
-                    <button class="btn btn-purple edit-only" onclick="openTeachModal()" title="Teach AI by batching PDF and JSON pairs">🧠 Teach AI</button>
-
-                    <label class="btn edit-only" for="uploadRubric" title="Load Rubric (.json)">📂 Rubric</label>
-                    <input type="file" id="uploadRubric" accept=".json">
-                    
-                    <button class="edit-only btn-success" onclick="exportRubricTemplate()" title="Export Template">💾 Template</button>
-                    <button onclick="clearGrades()" class="btn-danger edit-only" title="Reset Grades">🗑️ Reset</button>
+                        <label class="btn edit-only" for="uploadRubric" title="Load an existing Rubric Template"><span class="material-symbols-outlined">upload_file</span> Load Template</label>
+                        <input type="file" id="uploadRubric" accept=".json">
+                        
+                        <button class="edit-only btn-success" onclick="exportRubricTemplate()" title="Export current Rubric as Template"><span class="material-symbols-outlined">save</span> Save Template</button>
+                        <button onclick="clearGrades()" class="btn-danger edit-only" title="Reset all student grades"><span class="material-symbols-outlined">delete</span> Reset Grades</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="header">
-            <div class="header-left">
-                <div class="student-info">
-                    <label for="studentName">Student/Group Name:</label>
-                    <input type="text" id="studentName" placeholder="Enter name(s) here...">
-                </div>
-                
-                <div class="ai-instruction-box">
-                    <label for="aiPromptInput">🤖 AI Grading Instructions (Saves with Template):</label>
-                    <textarea id="aiPromptInput" placeholder="e.g., Don't grade the video presentation section. Be strict on citations." oninput="currentRubric.aiPrompt = this.value"></textarea>
-                </div>
+        <div id="aiWrapper" class="collapsible-panel collapsed">
+            <div class="panel-inner">
+                <div class="panel-content">
+                    <div class="controls-row">
+                        <label class="btn btn-purple grade-only" for="autoGradeFile" title="Have AI Grade Student PDFs (Review One-by-One)"><span class="material-symbols-outlined">robot_2</span> AI Grade Review</label>
+                        <input type="file" id="autoGradeFile" accept=".pdf, .png, .jpg, .jpeg" multiple>
 
-                <div class="ai-instruction-box edit-only" style="margin-top: 5px;">
-                    <label for="learnedRulesInput">🧠 Extracted Teacher Rules (Edit/Delete as needed):</label>
-                    <textarea id="learnedRulesInput" placeholder="Rules extracted from the Teach AI tool will appear here..." oninput="updateLearnedRules(this.value)"></textarea>
+                        <label class="btn btn-darkred grade-only" for="batchGradeFile" title="Silent Batch Auto-Grade directly to Folder"><span class="material-symbols-outlined">rocket_launch</span> Silent Batch AI</label>
+                        <input type="file" id="batchGradeFile" accept=".pdf, .png, .jpg, .jpeg" multiple>
+
+                        <button class="btn btn-purple edit-only" onclick="openTeachModal()" title="Teach AI by batching PDF and JSON pairs"><span class="material-symbols-outlined">psychology</span> Teach AI Logic</button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; width: 100%; flex-wrap: wrap;">
+                        <div class="ai-instruction-box" style="flex: 1; min-width: 250px;">
+                            <label for="aiPromptInput"><span class="material-symbols-outlined">chat</span> AI Grading Instructions (Saves with Template):</label>
+                            <textarea id="aiPromptInput" placeholder="e.g., Don't grade the video presentation section. Be strict on citations." oninput="currentRubric.aiPrompt = this.value"></textarea>
+                        </div>
+
+                        <div class="ai-instruction-box edit-only" style="flex: 1; min-width: 250px;">
+                            <label for="learnedRulesInput"><span class="material-symbols-outlined">rule</span> Extracted Teacher Rules (Edit/Delete as needed):</label>
+                            <textarea id="learnedRulesInput" placeholder="Rules extracted from the Teach AI tool will appear here..." oninput="updateLearnedRules(this.value)"></textarea>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="main-grading-header">
+            <div class="student-info">
+                <label for="studentName">Student/Group:</label>
+                <input type="text" id="studentName" placeholder="Enter name(s) here...">
             </div>
             
             <div class="header-right">
                 <div class="score-display">
                     Total: <span id="totalScore">0</span> / <span id="maxScore">100</span>
                 </div>
-                <button id="exportMainBtn" class="btn-success grade-only" style="padding: 10px 20px; font-size: 1.1em; width: 100%; justify-content: center;" onclick="exportStudentDataAndReport()" title="Export Student (HTML Report & Data)">🖨️ Export</button>
+                <button id="exportMainBtn" class="btn-success grade-only" style="padding: 10px 20px; font-size: 1.1em;" onclick="exportStudentDataAndReport()" title="Export Student (HTML Report & Data)"><span class="material-symbols-outlined">sim_card_download</span> Export</button>
             </div>
         </div>
     </div>
@@ -489,7 +489,7 @@
     <table class="rubric-table" id="rubricTable"></table>
     
     <div id="addCriterionContainer" style="display: none; margin-bottom: 20px; text-align: center;">
-        <button class="btn-success" onclick="addCriterion()">➕ Add New Criteria Row</button>
+        <button class="btn-success" onclick="addCriterion()"><span class="material-symbols-outlined">add</span> Add New Criteria Row</button>
     </div>
 
     <div id="overallCommentsContainer">
@@ -498,14 +498,18 @@
     </div>
 </div>
 
-<button id="smartFillBtn" onclick="autoFillMaxPoints()" title="Fills max points for all blank rows above your furthest graded row">✅ Fill Max Down To Here</button>
+<button id="smartFillBtn" onclick="autoFillMaxPoints()" title="Fills max points for all blank rows above your furthest graded row"><span class="material-symbols-outlined">check_circle</span> Fill Max Down To Here</button>
 
 <script>
     let isEditMode = false;
-    let isSettingsOpen = true; 
-    let currentGearRotation = 0; 
     let reportDirectoryHandle = null; 
     let jsonDirectoryHandle = null;
+
+    // UI State
+    let isSetupOpen = false;
+    let isAIOpen = false;
+    let setupRot = 0;
+    let aiRot = 0;
 
     let reviewQueue = [];
     let funnyInterval;
@@ -668,19 +672,58 @@
     let overallComment = "";
 
     // --- UI TOGGLE LOGIC ---
-    function toggleSettings() {
-        const wrapper = document.getElementById('settingsWrapper');
-        const gear = document.getElementById('gearIcon');
+    function toggleSetup() {
+        const wrapper = document.getElementById('setupWrapper');
+        const icon = document.getElementById('gearIcon');
+        const btn = document.getElementById('btnSetup');
         
-        isSettingsOpen = !isSettingsOpen;
-        
-        currentGearRotation += 180;
-        gear.style.transform = `rotate(${currentGearRotation}deg)`;
+        isSetupOpen = !isSetupOpen;
+        setupRot += 90;
+        icon.style.transform = `rotate(${setupRot}deg)`;
 
-        if (isSettingsOpen) {
+        if (isSetupOpen) {
             wrapper.classList.remove('collapsed');
+            wrapper.classList.add('open');
+            btn.classList.add('active');
         } else {
             wrapper.classList.add('collapsed');
+            wrapper.classList.remove('open');
+            btn.classList.remove('active');
+        }
+    }
+
+    function toggleAI() {
+        const wrapper = document.getElementById('aiWrapper');
+        const icon = document.getElementById('robotIcon');
+        const btn = document.getElementById('btnAI');
+        
+        isAIOpen = !isAIOpen;
+        aiRot += 360;
+        icon.style.transform = `rotate(${aiRot}deg)`;
+
+        if (isAIOpen) {
+            wrapper.classList.remove('collapsed');
+            wrapper.classList.add('open');
+            btn.classList.add('active');
+        } else {
+            wrapper.classList.add('collapsed');
+            wrapper.classList.remove('open');
+            btn.classList.remove('active');
+        }
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
+        
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            if(icon) icon.innerText = 'dark_mode'; // Show moon
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            if(icon) icon.innerText = 'light_mode'; // Show sun
         }
     }
 
@@ -696,26 +739,22 @@
         renderTeachQueue();
     }
 
-    function closeTeachModal() {
-        document.getElementById('teachModal').style.display = 'none';
-    }
+    function closeTeachModal() { document.getElementById('teachModal').style.display = 'none'; }
 
     function resetTeachDropZones() {
         teachDocFile = null; teachJsonFile = null;
         const dzDoc = document.getElementById('dropZoneDoc');
         const dzJson = document.getElementById('dropZoneJson');
-        dzDoc.innerText = '📄 1. Drop Document';
+        dzDoc.innerHTML = '<span class="material-symbols-outlined">description</span> 1. Drop Document';
         dzDoc.classList.remove('has-file');
-        dzJson.innerText = '📊 2. Drop JSON';
+        dzJson.innerHTML = '<span class="material-symbols-outlined">data_object</span> 2. Drop JSON';
         dzJson.classList.remove('has-file');
     }
 
     function setupDropZone(zoneId, inputId, expectedType) {
         const zone = document.getElementById(zoneId);
         const input = document.getElementById(inputId);
-
         zone.addEventListener('click', () => input.click());
-
         zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
         zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
         zone.addEventListener('drop', (e) => {
@@ -732,78 +771,53 @@
         if (type === 'doc') {
             if (!file.name.match(/\.(pdf|png|jpg|jpeg)$/i)) { alert("Please upload a PDF or Image."); return; }
             teachDocFile = file;
-            zone.innerText = "✅ " + file.name.substring(0, 20) + "...";
+            zone.innerHTML = "<span class='material-symbols-outlined'>check_circle</span> " + file.name.substring(0, 20) + "...";
         } else {
             if (!file.name.endsWith('.json')) { alert("Please upload a JSON file."); return; }
             teachJsonFile = file;
-            zone.innerText = "✅ " + file.name.substring(0, 20) + "...";
+            zone.innerHTML = "<span class='material-symbols-outlined'>check_circle</span> " + file.name.substring(0, 20) + "...";
         }
         zone.classList.add('has-file');
-        
         if (teachDocFile && teachJsonFile) {
             teachQueue.push({ doc: teachDocFile, json: teachJsonFile });
-            resetTeachDropZones();
-            renderTeachQueue();
+            resetTeachDropZones(); renderTeachQueue();
         }
     }
 
     function renderTeachQueue() {
         const container = document.getElementById('teachQueueContainer');
         const btn = document.getElementById('startTeachBtn');
-        
         if (teachQueue.length > 0) {
             container.style.display = 'block';
             container.innerHTML = teachQueue.map((pair, i) => 
-                `<div class="queue-item">
-                    <strong>Pair ${i+1}:</strong> ${pair.doc.name} ➕ ${pair.json.name}
-                 </div>`
+                `<div class="queue-item"><strong>Pair ${i+1}:</strong> ${pair.doc.name} ➕ ${pair.json.name}</div>`
             ).join('');
-            btn.disabled = false;
-            btn.innerText = `Start Learning (${teachQueue.length} Pairs)`;
+            btn.disabled = false; btn.innerHTML = `<span class="material-symbols-outlined">school</span> Start Learning (${teachQueue.length} Pairs)`;
         } else {
-            container.style.display = 'none';
-            btn.disabled = true;
-            btn.innerText = `Start Learning (0 Pairs)`;
+            container.style.display = 'none'; btn.disabled = true; btn.innerHTML = `<span class="material-symbols-outlined">school</span> Start Learning (0 Pairs)`;
         }
     }
 
     async function executeTeachAI() {
         closeTeachModal();
         document.getElementById('loadingOverlay').style.display = 'flex';
-        
-        let msgIdx = 0;
-        document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
+        let msgIdx = 0; document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
         funnyInterval = setInterval(() => {
-            msgIdx = (msgIdx + 1) % funnyMessages.length;
-            document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
+            msgIdx = (msgIdx + 1) % funnyMessages.length; document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
         }, 3500);
 
         let newRulesCount = 0;
-
         for (let i = 0; i < teachQueue.length; i++) {
             let pair = teachQueue[i];
             document.getElementById('loadingText').innerText = `AI is studying Pair ${i+1} of ${teachQueue.length}...\nExtracting rules from ${pair.json.name}`;
-            
             try {
-                const jsonText = await new Promise(resolve => {
-                    const r = new FileReader(); r.onload = e => resolve(e.target.result); r.readAsText(pair.json);
-                });
+                const jsonText = await new Promise(resolve => { const r = new FileReader(); r.onload = e => resolve(e.target.result); r.readAsText(pair.json); });
                 const gradedData = JSON.parse(jsonText);
-
-                const docDataUrl = await new Promise(resolve => {
-                    const r = new FileReader(); r.onload = e => resolve(e.target.result); r.readAsDataURL(pair.doc);
-                });
+                const docDataUrl = await new Promise(resolve => { const r = new FileReader(); r.onload = e => resolve(e.target.result); r.readAsDataURL(pair.doc); });
                 const base64Data = docDataUrl.split(',')[1];
 
                 const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: "teach",
-                        fileBase64: base64Data,
-                        mimeType: pair.doc.type,
-                        rubric: currentRubric,
-                        gradedData: { scores: gradedData.scores, comments: gradedData.comments }
-                    })
+                    method: 'POST', body: JSON.stringify({ action: "teach", fileBase64: base64Data, mimeType: pair.doc.type, rubric: currentRubric, gradedData: { scores: gradedData.scores, comments: gradedData.comments } })
                 });
 
                 const rawResponse = await response.text();
@@ -811,246 +825,139 @@
                 const result = JSON.parse(cleanJson);
 
                 if (result.error) throw new Error(result.error);
-
                 if (result.learnedRules && result.learnedRules.length > 0) {
                     if (!currentRubric.learnedRules) currentRubric.learnedRules = [];
                     currentRubric.learnedRules.push(...result.learnedRules);
                     newRulesCount += result.learnedRules.length;
                 }
-            } catch (err) {
-                console.error(err);
-                alert(`Teach AI Failed on pair ${i+1} (${pair.json.name})!\n\n` + err.message);
-            }
+            } catch (err) { console.error(err); alert(`Teach AI Failed on pair ${i+1} (${pair.json.name})!\n\n` + err.message); }
         }
 
         clearInterval(funnyInterval);
         document.getElementById('loadingOverlay').style.display = 'none';
         document.getElementById('loadingSubtext').innerText = "This usually takes 5-15 seconds.";
-        
         renderRubric(); 
-        
         if (newRulesCount > 0) {
-            alert(`Success! The AI extracted ${newRulesCount} new rules from the batch.\n\nTotal rules stored: ${currentRubric.learnedRules.length}\n\nDon't forget to click '💾 Template' to save this knowledge!`);
+            alert(`Success! The AI extracted ${newRulesCount} new rules from the batch.\n\nTotal rules stored: ${currentRubric.learnedRules.length}\n\nDon't forget to click 'Save Template' in Setup to save this knowledge!`);
         } else {
             alert("Batch complete, but the AI couldn't extract any new definitive rules from these examples.");
         }
     }
 
     function init() {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
         if (localStorage.getItem('theme') === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-            const btn = document.getElementById('themeToggleBtn');
-            if(btn) btn.innerText = '🌙';
+            body.setAttribute('data-theme', 'dark');
+            if(icon) icon.innerText = 'light_mode'; // Show sun if dark mode is active
+        } else {
+            if(icon) icon.innerText = 'dark_mode'; // Default to moon if light mode is active
         }
 
         document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.grade-only').forEach(el => el.style.display = 'inline-block');
 
-        updateMaxScore();
-        clearGrades();
-        updateExportButtonUI();
-        
+        updateMaxScore(); clearGrades(); updateExportButtonUI();
         window.addEventListener('scroll', handleScrollForFloatBtn);
         
-        // Setup Teach AI Modal Dropzones
-        setupDropZone('dropZoneDoc', 'teachDocInput', 'doc');
-        setupDropZone('dropZoneJson', 'teachJsonInput', 'json');
+        setupDropZone('dropZoneDoc', 'teachDocInput', 'doc'); setupDropZone('dropZoneJson', 'teachJsonInput', 'json');
 
-        // --- EXISTING LOCAL LOADERS ---
+        // Loaders
         document.getElementById('uploadRubric').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                try {
-                    currentRubric = JSON.parse(e.target.result);
-                    clearGrades();
-                    updateMaxScore();
-                    renderRubric();
-                } catch (err) { alert('Error parsing Rubric JSON file.'); }
-            };
-            reader.readAsText(file);
-            e.target.value = ""; 
+                try { currentRubric = JSON.parse(e.target.result); clearGrades(); updateMaxScore(); renderRubric(); } 
+                catch (err) { alert('Error parsing Rubric JSON file.'); }
+            }; reader.readAsText(file); e.target.value = ""; 
         });
 
         document.getElementById('loadStudentFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.type === "StudentGradeRecord") {
-                        currentRubric = data.rubric;
-                        scores = data.scores || {};
-                        comments = data.comments || {};
-                        isGraded = data.isGraded || {};
-                        document.getElementById('studentName').value = data.studentName || "";
-                        
-                        overallComment = data.overallComment || "";
+                        currentRubric = data.rubric; scores = data.scores || {}; comments = data.comments || {}; isGraded = data.isGraded || {};
+                        document.getElementById('studentName').value = data.studentName || ""; overallComment = data.overallComment || "";
                         const ocInput = document.getElementById('overallCommentsInput');
-                        if (ocInput) {
-                            ocInput.value = overallComment;
-                            ocInput.style.height = 'auto';
-                            ocInput.style.height = ocInput.scrollHeight + 'px';
-                        }
-                        updateMaxScore();
-                        renderRubric();
+                        if (ocInput) { ocInput.value = overallComment; ocInput.style.height = 'auto'; ocInput.style.height = ocInput.scrollHeight + 'px'; }
+                        updateMaxScore(); renderRubric();
                     } else { alert('Invalid student data file.'); }
                 } catch (err) { alert('Error parsing Student JSON file.'); }
-            };
-            reader.readAsText(file);
-            e.target.value = ""; 
+            }; reader.readAsText(file); e.target.value = ""; 
         });
 
-        // --- ACTION 1: AUTO-BUILD LISTENER ---
+        // AI Tools
         document.getElementById('autoBuildFile').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            document.getElementById('loadingText').innerText = "AI is writing your rubric...";
-            document.getElementById('loadingOverlay').style.display = 'flex';
-
+            const file = e.target.files[0]; if (!file) return;
+            document.getElementById('loadingText').innerText = "AI is writing your rubric..."; document.getElementById('loadingOverlay').style.display = 'flex';
             const reader = new FileReader();
             reader.onload = async function(event) {
                 const dataUrl = event.target.result;
                 try {
-                    const response = await fetch(WEB_APP_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: "build",
-                            fileBase64: dataUrl.split(',')[1],
-                            mimeType: file.type
-                        })
-                    });
+                    const response = await fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: "build", fileBase64: dataUrl.split(',')[1], mimeType: file.type }) });
                     const rawResponse = await response.text();
                     let cleanJson = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
                     const newRubric = JSON.parse(cleanJson);
-
                     if (newRubric && newRubric.error) throw new Error("Google Script says: " + newRubric.error);
-                    if (newRubric && newRubric.criteria) {
-                        currentRubric = newRubric;
-                        clearGrades();
-                        updateMaxScore();
-                        renderRubric();
-                        alert("Rubric successfully generated!");
-                    } else throw new Error("AI missed the format.");
-                } catch (err) {
-                    console.error(err); alert("Auto-Build Failed!\n\n" + err.message);
-                } finally {
-                    document.getElementById('loadingOverlay').style.display = 'none'; e.target.value = '';
-                }
-            };
-            reader.readAsDataURL(file);
+                    if (newRubric && newRubric.criteria) { currentRubric = newRubric; clearGrades(); updateMaxScore(); renderRubric(); alert("Rubric successfully generated!"); } 
+                    else throw new Error("AI missed the format.");
+                } catch (err) { console.error(err); alert("Auto-Build Failed!\n\n" + err.message); } 
+                finally { document.getElementById('loadingOverlay').style.display = 'none'; e.target.value = ''; }
+            }; reader.readAsDataURL(file);
         });
 
-        // --- ACTION 2: REVIEW MODE LISTENER (QUEUE) ---
         document.getElementById('autoGradeFile').addEventListener('change', function(e) {
             if(e.target.files.length === 0) return;
-            reviewQueue = Array.from(e.target.files);
-            e.target.value = ''; 
-            processNextReview();
+            reviewQueue = Array.from(e.target.files); e.target.value = ''; processNextReview();
         });
 
-        // --- ACTION 3: SILENT BATCH MODE LISTENER ---
         document.getElementById('batchGradeFile').addEventListener('change', async function(e) {
-            const files = Array.from(e.target.files);
-            if(files.length === 0) return;
-            e.target.value = ''; 
-            
-            if (!reportDirectoryHandle) {
-                alert("Please select a master folder to save your Batch reports into first.");
-                await selectSaveDirectory();
-                if (!reportDirectoryHandle) return; 
-            }
-
+            const files = Array.from(e.target.files); if(files.length === 0) return; e.target.value = ''; 
+            if (!reportDirectoryHandle) { alert("Please select a master folder in Setup first."); if(isAIOpen) toggleAI(); if(!isSetupOpen) toggleSetup(); return; }
             document.getElementById('loadingOverlay').style.display = 'flex';
-            
-            let msgIdx = 0;
-            document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
-            funnyInterval = setInterval(() => {
-                msgIdx = (msgIdx + 1) % funnyMessages.length;
-                document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
-            }, 3500);
-            
+            let msgIdx = 0; document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx];
+            funnyInterval = setInterval(() => { msgIdx = (msgIdx + 1) % funnyMessages.length; document.getElementById('loadingSubtext').innerText = funnyMessages[msgIdx]; }, 3500);
             for (let i = 0; i < files.length; i++) {
                 document.getElementById('loadingText').innerText = `Batch Grading: ${i + 1} of ${files.length}\n(${files[i].name})`;
                 await processSingleBatchFile(files[i]);
             }
-
-            clearInterval(funnyInterval);
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('loadingSubtext').innerText = "This usually takes 5-15 seconds.";
-            document.getElementById('loadingText').innerText = "AI is processing...";
+            clearInterval(funnyInterval); document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('loadingSubtext').innerText = "This usually takes 5-15 seconds."; document.getElementById('loadingText').innerText = "AI is processing...";
             alert(`Batch Complete! ${files.length} reports saved to your folder.`);
         });
     }
 
-    // --- GRADING PIPELINE LOGIC ---
-
     async function processNextReview() {
-        if (reviewQueue.length === 0) {
-            updateExportButtonUI();
-            return;
-        }
-
-        const file = reviewQueue.shift();
-        updateExportButtonUI();
-
-        document.getElementById('loadingText').innerText = `AI is grading: ${file.name}`;
-        document.getElementById('loadingOverlay').style.display = 'flex';
-
+        if (reviewQueue.length === 0) { updateExportButtonUI(); return; }
+        const file = reviewQueue.shift(); updateExportButtonUI();
+        document.getElementById('loadingText').innerText = `AI is grading: ${file.name}`; document.getElementById('loadingOverlay').style.display = 'flex';
         const reader = new FileReader();
         reader.onload = async function(event) {
             const dataUrl = event.target.result;
             try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: "grade",
-                        fileBase64: dataUrl.split(',')[1],
-                        mimeType: file.type,
-                        rubric: currentRubric,
-                        customPrompt: currentRubric.aiPrompt || ""
-                    })
-                });
-
+                const response = await fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: "grade", fileBase64: dataUrl.split(',')[1], mimeType: file.type, rubric: currentRubric, customPrompt: currentRubric.aiPrompt || "" }) });
                 const rawResponse = await response.text();
                 let cleanJson = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
                 const result = JSON.parse(cleanJson);
-
                 if (result && result.error) throw new Error("Google Script says: " + result.error);
-                
                 if (result && result.grades) {
                     clearGrades(); 
-                    
                     let bestName = result.studentName || "";
-                    if (bestName.trim() === "" || bestName === "Unknown Student") {
-                        bestName = file.name.replace(/\.[^/.]+$/, ""); 
-                    }
+                    if (bestName.trim() === "" || bestName === "Unknown Student") { bestName = file.name.replace(/\.[^/.]+$/, ""); }
                     document.getElementById('studentName').value = bestName;
-
                     result.grades.forEach(g => {
                         let matchedLevelIdx = currentRubric.criteria[g.criterionIndex].levels.findIndex(l => l.points === g.points);
-                        if(matchedLevelIdx !== -1) {
-                            selectScore(g.criterionIndex, matchedLevelIdx, g.points);
-                        } else {
-                            manualScoreUpdate(g.criterionIndex, g.points);
-                        }
+                        if(matchedLevelIdx !== -1) { selectScore(g.criterionIndex, matchedLevelIdx, g.points); } else { manualScoreUpdate(g.criterionIndex, g.points); }
                         updateRowComment(g.criterionIndex, { value: g.comment });
                     });
-                    
                     renderRubric(); 
                 } else throw new Error("AI missed the grading format.");
-
-            } catch (err) {
-                console.error(err); 
-                alert(`Grading failed for ${file.name}!\n\n` + err.message);
-            } finally {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            }
-        };
-        reader.readAsDataURL(file);
+            } catch (err) { console.error(err); alert(`Grading failed for ${file.name}!\n\n` + err.message); } 
+            finally { document.getElementById('loadingOverlay').style.display = 'none'; }
+        }; reader.readAsDataURL(file);
     }
 
     async function cleanupOldReports(dirHandle, safeStudent, safeProject, currentFilename) {
@@ -1058,9 +965,7 @@
         try {
             const prefix = `${safeStudent} - ${safeProject}`;
             for await (const [name, handle] of dirHandle.entries()) {
-                if (name.startsWith(prefix) && name.endsWith('.html') && name !== currentFilename) {
-                    await dirHandle.removeEntry(name);
-                }
+                if (name.startsWith(prefix) && name.endsWith('.html') && name !== currentFilename) { await dirHandle.removeEntry(name); }
             }
         } catch(e) { console.warn("Cleanup error", e); }
     }
@@ -1071,60 +976,27 @@
             reader.onload = async function(event) {
                 const dataUrl = event.target.result;
                 try {
-                    const response = await fetch(WEB_APP_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: "grade",
-                            fileBase64: dataUrl.split(',')[1],
-                            mimeType: file.type,
-                            rubric: currentRubric,
-                            customPrompt: currentRubric.aiPrompt || ""
-                        })
-                    });
-
+                    const response = await fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: "grade", fileBase64: dataUrl.split(',')[1], mimeType: file.type, rubric: currentRubric, customPrompt: currentRubric.aiPrompt || "" }) });
                     const rawResponse = await response.text();
                     let cleanJson = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
                     const result = JSON.parse(cleanJson);
-
                     if (result && result.grades && !result.error) {
-                        
-                        let batchScores = {};
-                        let batchComments = {};
-                        let batchGraded = {};
-                        currentRubric.criteria.forEach((_, idx) => {
-                            batchScores[idx] = 0; batchComments[idx] = ''; batchGraded[idx] = false;
-                        });
-
+                        let batchScores = {}; let batchComments = {}; let batchGraded = {};
+                        currentRubric.criteria.forEach((_, idx) => { batchScores[idx] = 0; batchComments[idx] = ''; batchGraded[idx] = false; });
                         let bestName = result.studentName || "";
-                        if (bestName.trim() === "" || bestName === "Unknown Student") {
-                            bestName = file.name.replace(/\.[^/.]+$/, ""); 
-                        }
+                        if (bestName.trim() === "" || bestName === "Unknown Student") { bestName = file.name.replace(/\.[^/.]+$/, ""); }
+                        result.grades.forEach(g => { batchScores[g.criterionIndex] = g.points; batchGraded[g.criterionIndex] = true; batchComments[g.criterionIndex] = g.comment; });
+                        let totalScore = 0; for (let key in batchScores) { totalScore += batchScores[key]; }
 
-                        result.grades.forEach(g => {
-                            batchScores[g.criterionIndex] = g.points;
-                            batchGraded[g.criterionIndex] = true;
-                            batchComments[g.criterionIndex] = g.comment;
-                        });
+                        let safeStudent = bestName.replace(/[^a-z0-9\s]/gi, '_').trim(); let safeProject = (currentRubric.title || "Project").replace(/[^a-z0-9\s]/gi, '_').trim();
+                        let jsonFilename = `${safeStudent} - ${safeProject}.json`; let reportFilename = `${safeStudent} - ${safeProject}.html`;
 
-                        let totalScore = 0;
-                        for (let key in batchScores) { totalScore += batchScores[key]; }
-
-                        let safeStudent = bestName.replace(/[^a-z0-9\s]/gi, '_').trim();
-                        let safeProject = (currentRubric.title || "Project").replace(/[^a-z0-9\s]/gi, '_').trim();
-                        let jsonFilename = `${safeStudent} - ${safeProject}.json`;
-                        let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
-
-                        const exportData = {
-                            type: "StudentGradeRecord", studentName: bestName, projectTitle: currentRubric.title,
-                            rubric: currentRubric, scores: batchScores, comments: batchComments, overallComment: "", isGraded: batchGraded
-                        };
+                        const exportData = { type: "StudentGradeRecord", studentName: bestName, projectTitle: currentRubric.title, rubric: currentRubric, scores: batchScores, comments: batchComments, overallComment: "", isGraded: batchGraded };
                         const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-                        
                         let tempScores = scores; let tempComments = comments; let tempGraded = isGraded;
                         scores = batchScores; comments = batchComments; isGraded = batchGraded;
                         const htmlReportString = generateStandaloneReport(bestName, currentRubric.title, totalScore);
                         scores = tempScores; comments = tempComments; isGraded = tempGraded;
-                        
                         const reportBlob = new Blob([htmlReportString], { type: 'text/html' });
 
                         if (reportDirectoryHandle && jsonDirectoryHandle) {
@@ -1133,62 +1005,41 @@
                             await silentWriteFile(reportDirectoryHandle, reportFilename, reportBlob);
                         }
                     }
-                } catch (err) {
-                    console.error(`Batch failed for ${file.name}`, err);
-                }
+                } catch (err) { console.error(`Batch failed for ${file.name}`, err); }
                 resolve(); 
-            };
-            reader.readAsDataURL(file);
+            }; reader.readAsDataURL(file);
         });
     }
 
     function updateExportButtonUI() {
         const btn = document.getElementById('exportMainBtn');
         if (reviewQueue.length > 0) {
-            btn.innerHTML = `💾 Save & Next (${reviewQueue.length} left)`;
-            btn.classList.remove('btn-success');
-            btn.classList.add('btn-purple');
+            btn.innerHTML = `<span class="material-symbols-outlined">save</span> Save & Next (${reviewQueue.length})`;
+            btn.classList.remove('btn-success'); btn.classList.add('btn-purple');
         } else {
-            btn.innerHTML = `🖨️ Export`;
-            btn.classList.remove('btn-purple');
-            btn.classList.add('btn-success');
+            btn.innerHTML = `<span class="material-symbols-outlined">sim_card_download</span> Export`;
+            btn.classList.remove('btn-purple'); btn.classList.add('btn-success');
         }
     }
 
-    function updateLearnedRules(val) {
-        currentRubric.learnedRules = val.split('\n').filter(r => r.trim() !== '');
-    }
+    function updateLearnedRules(val) { currentRubric.learnedRules = val.split('\n').filter(r => r.trim() !== ''); }
 
     function handleScrollForFloatBtn() {
         const btn = document.getElementById('smartFillBtn');
         if (!btn) return;
-        if (window.scrollY > 150 && !isEditMode) {
-            btn.classList.add('visible');
-        } else {
-            btn.classList.remove('visible');
-        }
+        if (window.scrollY > 150 && !isEditMode) { btn.classList.add('visible'); } else { btn.classList.remove('visible'); }
     }
 
     function autoFillMaxPoints() {
         if (isEditMode) return;
         let lastGradedIndex = -1;
-        for (let i = currentRubric.criteria.length - 1; i >= 0; i--) {
-            if (isGraded[i]) { lastGradedIndex = i; break; }
-        }
-
+        for (let i = currentRubric.criteria.length - 1; i >= 0; i--) { if (isGraded[i]) { lastGradedIndex = i; break; } }
         let limit = lastGradedIndex !== -1 ? lastGradedIndex : currentRubric.criteria.length;
-
-        if (lastGradedIndex === -1) {
-            if (!confirm("You haven't selected any grades yet. Do you want to automatically fill MAX POINTS for the ENTIRE rubric?")) return;
-        }
-
+        if (lastGradedIndex === -1) { if (!confirm("You haven't selected any grades yet. Do you want to automatically fill MAX POINTS for the ENTIRE rubric?")) return; }
         for (let i = 0; i < limit; i++) {
             if (!isGraded[i]) {
-                let maxPts = -Infinity;
-                let maxIdx = -1;
-                currentRubric.criteria[i].levels.forEach((l, lIdx) => {
-                    if (l.points > maxPts) { maxPts = l.points; maxIdx = lIdx; }
-                });
+                let maxPts = -Infinity; let maxIdx = -1;
+                currentRubric.criteria[i].levels.forEach((l, lIdx) => { if (l.points > maxPts) { maxPts = l.points; maxIdx = lIdx; } });
                 if (maxIdx !== -1) selectScore(i, maxIdx, maxPts);
             }
         }
@@ -1196,8 +1047,7 @@
 
     function updateMaxScore() {
         let max = currentRubric.criteria.reduce((total, crit) => {
-            if (!crit.levels || crit.levels.length === 0) return total;
-            return total + Math.max(...crit.levels.map(l => l.points));
+            if (!crit.levels || crit.levels.length === 0) return total; return total + Math.max(...crit.levels.map(l => l.points));
         }, 0);
         document.getElementById('maxScore').innerText = max;
     }
@@ -1207,51 +1057,41 @@
         const btn = document.getElementById('toggleEditBtn');
         const addContainer = document.getElementById('addCriterionContainer');
         const overallContainer = document.getElementById('overallCommentsContainer');
-        
         const editEls = document.querySelectorAll('.edit-only');
         const gradeEls = document.querySelectorAll('.grade-only');
 
         if (isEditMode) {
-            btn.innerHTML = "💾 Save"; btn.title = "Save & Exit Edit Mode";
+            btn.innerHTML = `<span class="material-symbols-outlined">save</span> Save Layout`; 
             btn.classList.remove('btn-warning'); btn.classList.add('btn-success');
             addContainer.style.display = 'block'; overallContainer.style.display = 'none'; 
-            editEls.forEach(el => el.style.display = 'inline-block'); gradeEls.forEach(el => el.style.display = 'none');
+            editEls.forEach(el => el.style.display = 'inline-flex'); gradeEls.forEach(el => el.style.display = 'none');
             
-            if (!isSettingsOpen) toggleSettings();
+            // Auto-open Setup if it isn't so they can see the save template button
+            if (!isSetupOpen) toggleSetup();
+            // Auto-open AI to show rules editor
+            if (!isAIOpen) toggleAI();
         } else {
-            btn.innerHTML = "✏️ Edit"; btn.title = "Enter Edit Mode";
+            btn.innerHTML = `<span class="material-symbols-outlined">edit</span> Edit Rubric`; 
             btn.classList.remove('btn-success'); btn.classList.add('btn-warning');
             addContainer.style.display = 'none'; overallContainer.style.display = 'block';
             updateMaxScore(); 
-            editEls.forEach(el => el.style.display = 'none'); gradeEls.forEach(el => el.style.display = 'inline-block');
+            editEls.forEach(el => el.style.display = 'none'); gradeEls.forEach(el => el.style.display = 'inline-flex');
         }
-        
-        handleScrollForFloatBtn();
-        renderRubric();
+        handleScrollForFloatBtn(); renderRubric();
     }
 
     function renderRubric() {
         const titleContainer = document.getElementById('projectTitleContainer');
-        if (isEditMode) {
-            titleContainer.innerHTML = `<input type="text" class="edit-input" style="font-size: 2em; font-weight: bold; text-align: left; color: var(--primary);" value="${escapeHTML(currentRubric.title || 'Untitled Project')}" onchange="currentRubric.title = this.value">`;
-        } else {
-            titleContainer.innerHTML = `<h1>${escapeHTML(currentRubric.title || 'Untitled Project')}</h1>`;
-        }
+        if (isEditMode) { titleContainer.innerHTML = `<input type="text" class="edit-input" style="font-size: 2em; font-weight: bold; text-align: left; color: var(--primary);" value="${escapeHTML(currentRubric.title || 'Untitled Project')}" onchange="currentRubric.title = this.value">`; } 
+        else { titleContainer.innerHTML = `<h1>${escapeHTML(currentRubric.title || 'Untitled Project')}</h1>`; }
         
         document.getElementById('aiPromptInput').value = currentRubric.aiPrompt || "";
-        
         const rulesInput = document.getElementById('learnedRulesInput');
-        if (rulesInput) {
-            rulesInput.value = (currentRubric.learnedRules || []).join('\n');
-        }
+        if (rulesInput) { rulesInput.value = (currentRubric.learnedRules || []).join('\n'); }
 
-        const table = document.getElementById('rubricTable');
-        table.innerHTML = '';
-
+        const table = document.getElementById('rubricTable'); table.innerHTML = '';
         let maxCols = 0;
-        if (currentRubric.criteria.length > 0) {
-            maxCols = Math.max(...currentRubric.criteria.map(c => c.levels.length));
-        }
+        if (currentRubric.criteria.length > 0) { maxCols = Math.max(...currentRubric.criteria.map(c => c.levels.length)); }
 
         currentRubric.criteria.forEach((crit, critIndex) => {
             if (scores[critIndex] === undefined) scores[critIndex] = 0;
@@ -1259,32 +1099,26 @@
             if (isGraded[critIndex] === undefined) isGraded[critIndex] = false;
 
             const tr = document.createElement('tr');
-            const titleTd = document.createElement('td');
-            titleTd.className = 'criterion-title';
+            const titleTd = document.createElement('td'); titleTd.className = 'criterion-title';
             
             if (isEditMode) {
                 let addLevelBtn = '';
-                if (crit.levels.length === 0) {
-                    addLevelBtn = `<button class="btn-info btn-small" onclick="insertLevel(${critIndex}, 0)" style="width:100%; margin-top:5px;">➕ Add Level</button>`;
-                }
+                if (crit.levels.length === 0) { addLevelBtn = `<button class="btn-info btn-small" onclick="insertLevel(${critIndex}, 0)" style="width:100%; margin-top:5px;"><span class="material-symbols-outlined">add</span> Add Level</button>`; }
                 titleTd.innerHTML = `
                     <input type="text" class="edit-input" style="font-weight:bold;" value="${escapeHTML(crit.name)}" onchange="currentRubric.criteria[${critIndex}].name = this.value">
                     <div class="move-controls">
-                        <button class="btn btn-icon" onclick="moveCriterion(${critIndex}, -1)" ${critIndex === 0 ? 'disabled' : ''}>⬆️</button>
-                        <button class="btn btn-icon" onclick="moveCriterion(${critIndex}, 1)" ${critIndex === currentRubric.criteria.length - 1 ? 'disabled' : ''}>⬇️</button>
+                        <button class="btn btn-icon" onclick="moveCriterion(${critIndex}, -1)" ${critIndex === 0 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_upward</span></button>
+                        <button class="btn btn-icon" onclick="moveCriterion(${critIndex}, 1)" ${critIndex === currentRubric.criteria.length - 1 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_downward</span></button>
                     </div>
-                    <button class="btn-danger btn-small" onclick="removeCriterion(${critIndex})" style="width:100%; margin-top:5px;">🗑️ Delete Row</button>
+                    <button class="btn-danger btn-small" onclick="removeCriterion(${critIndex})" style="width:100%; margin-top:5px; justify-content:center;"><span class="material-symbols-outlined">delete</span> Delete Row</button>
                     ${addLevelBtn}
                 `;
-            } else {
-                titleTd.innerText = crit.name;
-            }
+            } else { titleTd.innerText = crit.name; }
             tr.appendChild(titleTd);
 
             crit.levels.forEach((level, levelIndex) => {
                 const td = document.createElement('td');
-                td.className = 'level-cell' + (isEditMode ? ' edit-mode' : '');
-                td.id = `cell-${critIndex}-${levelIndex}`;
+                td.className = 'level-cell' + (isEditMode ? ' edit-mode' : ''); td.id = `cell-${critIndex}-${levelIndex}`;
                 
                 if (isEditMode) {
                     td.innerHTML = `
@@ -1295,9 +1129,9 @@
                         <textarea class="edit-textarea" onchange="currentRubric.criteria[${critIndex}].levels[${levelIndex}].desc = this.value">${escapeHTML(level.desc)}</textarea>
                         
                         <div style="display: flex; justify-content: space-between; gap: 5px; margin-top: 8px;">
-                            <button class="btn-info btn-small btn-icon" onclick="insertLevel(${critIndex}, ${levelIndex})" title="Add level before">➕</button>
-                            <button class="btn-danger btn-small" onclick="removeLevel(${critIndex}, ${levelIndex})" style="flex-grow: 1;">❌ Remove</button>
-                            <button class="btn-info btn-small btn-icon" onclick="insertLevel(${critIndex}, ${levelIndex + 1})" title="Add level after">➕</button>
+                            <button class="btn-info btn-small btn-icon" onclick="insertLevel(${critIndex}, ${levelIndex})" title="Add level before"><span class="material-symbols-outlined">add</span></button>
+                            <button class="btn-danger btn-small" onclick="removeLevel(${critIndex}, ${levelIndex})" style="flex-grow: 1; justify-content:center;"><span class="material-symbols-outlined">close</span> Remove</button>
+                            <button class="btn-info btn-small btn-icon" onclick="insertLevel(${critIndex}, ${levelIndex + 1})" title="Add level after"><span class="material-symbols-outlined">add</span></button>
                         </div>
                     `;
                 } else {
@@ -1307,69 +1141,47 @@
                         <div class="level-desc">${escapeHTML(level.desc)}</div>
                     `;
                     td.onclick = () => selectScore(critIndex, levelIndex, level.points);
-                    if (isGraded[critIndex] && scores[critIndex] === level.points) {
-                        td.classList.add('selected');
-                    }
+                    if (isGraded[critIndex] && scores[critIndex] === level.points) { td.classList.add('selected'); }
                 }
                 tr.appendChild(td);
             });
 
             let emptyCellsRequired = maxCols - crit.levels.length;
-            for (let i = 0; i < emptyCellsRequired; i++) { 
-                const emptyTd = document.createElement('td');
-                tr.appendChild(emptyTd); 
-            }
+            for (let i = 0; i < emptyCellsRequired; i++) { const emptyTd = document.createElement('td'); tr.appendChild(emptyTd); }
 
             if (isEditMode) {
-                const emptyEndTd = document.createElement('td');
-                emptyEndTd.className = 'score-cell'; 
-                emptyEndTd.innerHTML = `<div style="color: var(--accent); font-size: 0.8em; margin-top: 20px;">Use ➕ buttons to add columns</div>`;
+                const emptyEndTd = document.createElement('td'); emptyEndTd.className = 'score-cell'; 
+                emptyEndTd.innerHTML = `<div style="color: var(--accent); font-size: 0.8em; margin-top: 20px;">Use <span class="material-symbols-outlined" style="font-size:1em;">add</span> buttons to add columns</div>`;
                 tr.appendChild(emptyEndTd);
             } else {
-                const scoreTd = document.createElement('td');
-                scoreTd.className = 'score-cell';
-                scoreTd.innerHTML = `
-                    <div style="color: var(--primary);">Score</div>
-                    <input type="number" class="score-input" id="score-input-${critIndex}" step="0.5" value="${scores[critIndex]}" oninput="manualScoreUpdate(${critIndex}, this.value)">
-                `;
+                const scoreTd = document.createElement('td'); scoreTd.className = 'score-cell';
+                scoreTd.innerHTML = `<div style="color: var(--primary);">Score</div><input type="number" class="score-input" id="score-input-${critIndex}" step="0.5" value="${scores[critIndex]}" oninput="manualScoreUpdate(${critIndex}, this.value)">`;
                 tr.appendChild(scoreTd);
             }
-
             table.appendChild(tr);
 
             if (!isEditMode) {
-                const commentTr = document.createElement('tr');
-                commentTr.className = 'comments-row';
-                const commentTd = document.createElement('td');
-                commentTd.colSpan = maxCols + 2; 
+                const commentTr = document.createElement('tr'); commentTr.className = 'comments-row';
+                const commentTd = document.createElement('td'); commentTd.colSpan = maxCols + 2; 
                 commentTd.innerHTML = `<textarea class="comments-input" id="comment-input-${critIndex}" placeholder="Comments for ${escapeHTML(crit.name)}..." oninput="updateRowComment(${critIndex}, this)">${escapeHTML(comments[critIndex])}</textarea>`;
-                commentTr.appendChild(commentTd);
-                table.appendChild(commentTr);
+                commentTr.appendChild(commentTd); table.appendChild(commentTr);
             }
         });
 
         if (!isEditMode) {
             updateTotalDisplay();
-            document.querySelectorAll('.comments-input').forEach(ta => {
-                ta.style.height = 'auto';
-                ta.style.height = ta.scrollHeight + 'px';
-            });
+            document.querySelectorAll('.comments-input').forEach(ta => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
         }
     }
 
     function moveCriterion(index, direction) {
         if (direction === -1 && index === 0) return;
         if (direction === 1 && index === currentRubric.criteria.length - 1) return;
-
         const newIndex = index + direction;
-        const tempCrit = currentRubric.criteria[index];
-        currentRubric.criteria[index] = currentRubric.criteria[newIndex];
-        currentRubric.criteria[newIndex] = tempCrit;
-
+        const tempCrit = currentRubric.criteria[index]; currentRubric.criteria[index] = currentRubric.criteria[newIndex]; currentRubric.criteria[newIndex] = tempCrit;
         const tempScore = scores[index]; scores[index] = scores[newIndex]; scores[newIndex] = tempScore;
         const tempComment = comments[index]; comments[index] = comments[newIndex]; comments[newIndex] = tempComment;
         const tempGraded = isGraded[index]; isGraded[index] = isGraded[newIndex]; isGraded[newIndex] = tempGraded;
-
         renderRubric();
     }
 
@@ -1381,7 +1193,6 @@
         if(confirm("Are you sure you want to delete this entire row?")) {
             currentRubric.criteria.splice(critIndex, 1);
             delete scores[critIndex]; delete comments[critIndex]; delete isGraded[critIndex];
-            
             let newScores = {}; let newComments = {}; let newGraded = {};
             currentRubric.criteria.forEach((_, i) => {
                 newScores[i] = scores[i >= critIndex ? i + 1 : i] || 0;
@@ -1402,18 +1213,14 @@
         });
         const activeCell = document.getElementById(`cell-${critIndex}-${levelIndex}`);
         if(activeCell) activeCell.classList.add('selected');
-        
         document.getElementById(`score-input-${critIndex}`).value = points;
         scores[critIndex] = parseFloat(points);
         updateTotalDisplay();
     }
 
     function manualScoreUpdate(critIndex, value) {
-        let val = parseFloat(value);
-        if (isNaN(val)) val = 0;
-        scores[critIndex] = val;
-        isGraded[critIndex] = true;
-
+        let val = parseFloat(value); if (isNaN(val)) val = 0;
+        scores[critIndex] = val; isGraded[critIndex] = true;
         currentRubric.criteria[critIndex].levels.forEach((_, i) => {
             const cell = document.getElementById(`cell-${critIndex}-${i}`);
             if(cell) cell.classList.remove('selected');
@@ -1421,43 +1228,52 @@
         updateTotalDisplay();
     }
 
-    function updateRowComment(critIndex, element) {
-        comments[critIndex] = element.value;
-        if(element.style) {
-            element.style.height = 'auto';
-            element.style.height = element.scrollHeight + 'px';
-        }
-    }
-
-    function updateOverallComment(element) {
-        overallComment = element.value;
-        element.style.height = 'auto';
-        element.style.height = element.scrollHeight + 'px';
-    }
-
-    function updateTotalDisplay() {
-        let total = 0;
-        for (let key in scores) { total += scores[key]; }
-        document.getElementById('totalScore').innerText = total;
-    }
+    function updateRowComment(critIndex, element) { comments[critIndex] = element.value; if(element.style) { element.style.height = 'auto'; element.style.height = element.scrollHeight + 'px'; } }
+    function updateOverallComment(element) { overallComment = element.value; element.style.height = 'auto'; element.style.height = element.scrollHeight + 'px'; }
+    function updateTotalDisplay() { let total = 0; for (let key in scores) { total += scores[key]; } document.getElementById('totalScore').innerText = total; }
 
     function clearGrades() {
         document.getElementById('studentName').value = '';
-        currentRubric.criteria.forEach((crit, idx) => {
-            scores[idx] = 0; comments[idx] = ''; isGraded[idx] = false;
-        });
+        currentRubric.criteria.forEach((crit, idx) => { scores[idx] = 0; comments[idx] = ''; isGraded[idx] = false; });
         overallComment = "";
         const ocInput = document.getElementById('overallCommentsInput');
         if (ocInput) { ocInput.value = ""; ocInput.style.height = 'auto'; }
-        renderRubric();
-        window.scrollTo(0, 0); 
+        renderRubric(); window.scrollTo(0, 0); 
+    }
+
+    async function selectSaveDirectory() {
+        try {
+            reportDirectoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+            jsonDirectoryHandle = await reportDirectoryHandle.getDirectoryHandle('backups', { create: true });
+            const statusEl = document.getElementById('saveStatus');
+            statusEl.innerHTML = `<span class="material-symbols-outlined" style="font-size: 1.1em;">folder_open</span> Saving to: ${reportDirectoryHandle.name}`;
+            statusEl.classList.add('active');
+        } catch (error) {
+            if (error.name !== 'AbortError') { console.error('Directory selection failed', error); alert("Could not access the folder. Please try again."); }
+        }
+    }
+
+    async function silentWriteFile(handle, filename, blobData) {
+        if (!handle) return false;
+        try {
+            try { await handle.removeEntry(filename); } catch(e) {} 
+            const fileHandle = await handle.getFileHandle(filename, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(blobData);
+            await writable.close();
+            return true;
+        } catch (error) { console.error(`Failed to write ${filename}`, error); return false; }
+    }
+
+    function fallbackDownload(filename, blob) {
+        const url = URL.createObjectURL(blob); const a = document.createElement('a');
+        a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
     }
 
     function generateStandaloneReport(studentName, projectTitle, totalScore) {
         let maxCols = 0;
-        if (currentRubric.criteria.length > 0) {
-            maxCols = Math.max(...currentRubric.criteria.map(c => c.levels.length));
-        }
+        if (currentRubric.criteria.length > 0) { maxCols = Math.max(...currentRubric.criteria.map(c => c.levels.length)); }
 
         let html = `<!DOCTYPE html>
 <html lang="en">
@@ -1505,104 +1321,41 @@
 
         currentRubric.criteria.forEach((crit, i) => {
             html += `<tr><td class="crit-title">${escapeHTML(crit.name)}</td>`;
-            
             crit.levels.forEach((level) => {
                 let isSelected = (isGraded[i] && scores[i] === level.points) ? 'selected' : '';
-                html += `<td class="level-cell ${isSelected}">
-                            <span class="level-pts">${level.points} pts</span>
-                            <span class="level-title">${escapeHTML(level.title)}</span>
-                            <span>${escapeHTML(level.desc)}</span>
-                         </td>`;
+                html += `<td class="level-cell ${isSelected}"><span class="level-pts">${level.points} pts</span><span class="level-title">${escapeHTML(level.title)}</span><span>${escapeHTML(level.desc)}</span></td>`;
             });
-
             let emptyCellsRequired = maxCols - crit.levels.length;
             for (let j = 0; j < emptyCellsRequired; j++) { html += `<td></td>`; }
-
             html += `<td class="score-col">${scores[i]}</td></tr>`;
-
             if (comments[i] && comments[i].trim() !== '') {
-                html += `<tr class="comment-row"><td colspan="${maxCols + 2}">
-                            <div class="comment-box"><strong>Feedback:</strong><br>${escapeHTML(comments[i])}</div>
-                         </td></tr>`;
+                html += `<tr class="comment-row"><td colspan="${maxCols + 2}"><div class="comment-box"><strong>Feedback:</strong><br>${escapeHTML(comments[i])}</div></td></tr>`;
             }
         });
-
         html += `</table>`;
-
         if (overallComment && overallComment.trim() !== '') {
-            html += `<div class="overall-comments">
-                        <h3>Overall Project Feedback</h3>
-                        <div>${escapeHTML(overallComment)}</div>
-                     </div>`;
+            html += `<div class="overall-comments"><h3>Overall Project Feedback</h3><div>${escapeHTML(overallComment)}</div></div>`;
         }
-
         html += `</body></html>`;
         return html;
-    }
-
-    async function selectSaveDirectory() {
-        try {
-            reportDirectoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-            jsonDirectoryHandle = await reportDirectoryHandle.getDirectoryHandle('backups', { create: true });
-            
-            const statusEl = document.getElementById('saveStatus');
-            statusEl.innerText = `Saving Reports to: ${reportDirectoryHandle.name} | JSONs to: backups/`;
-            statusEl.classList.add('active');
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                console.error('Directory selection failed', error);
-                alert("Could not access the folder. Please try again.");
-            }
-        }
-    }
-
-    async function silentWriteFile(handle, filename, blobData) {
-        if (!handle) return false;
-        try {
-            try { await handle.removeEntry(filename); } catch(e) {} 
-            const fileHandle = await handle.getFileHandle(filename, { create: true });
-            const writable = await fileHandle.createWritable();
-            await writable.write(blobData);
-            await writable.close();
-            return true;
-        } catch (error) {
-            console.error(`Failed to write ${filename}`, error);
-            return false;
-        }
-    }
-
-    function fallbackDownload(filename, blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
     }
 
     async function exportStudentDataAndReport() {
         let studentName = document.getElementById('studentName').value.trim();
         let missingGrades = [];
-        
-        currentRubric.criteria.forEach((crit, idx) => {
-            if (!isGraded[idx]) { missingGrades.push(crit.name); }
-        });
+        currentRubric.criteria.forEach((crit, idx) => { if (!isGraded[idx]) { missingGrades.push(crit.name); } });
 
         if (!studentName || missingGrades.length > 0) {
             let warningMsg = "Hold on! You have missing information:\n\n";
             if (!studentName) warningMsg += "• Student/Group Name is blank\n";
-            if (missingGrades.length > 0) {
-                warningMsg += "• Unscored Categories:\n   - " + missingGrades.join("\n   - ") + "\n";
-            }
+            if (missingGrades.length > 0) { warningMsg += "• Unscored Categories:\n   - " + missingGrades.join("\n   - ") + "\n"; }
             warningMsg += "\nDo you want to export the incomplete grade anyway?";
-            
             if (!confirm(warningMsg)) { return; }
         }
 
         if (!reportDirectoryHandle && window.showDirectoryPicker) {
-            alert("Please select a master folder to save your files into first.");
+            alert("Please select a master folder in Setup to save your files into first.");
+            if(!isSetupOpen) toggleSetup();
             await selectSaveDirectory();
             if (!reportDirectoryHandle) return; 
         }
@@ -1615,18 +1368,9 @@
         let totalScore = document.getElementById('totalScore').innerText;
 
         let jsonFilename = `${safeStudent} - ${safeProject}.json`;
-        let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
+        let reportFilename = `${safeStudent} - ${safeProject}.html`;
 
-        const exportData = {
-            type: "StudentGradeRecord",
-            studentName: studentName,
-            projectTitle: projectTitle,
-            rubric: currentRubric,
-            scores: scores,
-            comments: comments,
-            overallComment: overallComment,
-            isGraded: isGraded
-        };
+        const exportData = { type: "StudentGradeRecord", studentName: studentName, projectTitle: projectTitle, rubric: currentRubric, scores: scores, comments: comments, overallComment: overallComment, isGraded: isGraded };
         const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
         const htmlReportString = generateStandaloneReport(studentName, projectTitle, totalScore);
         const reportBlob = new Blob([htmlReportString], { type: 'text/html' });
@@ -1636,28 +1380,18 @@
                 await cleanupOldReports(reportDirectoryHandle, safeStudent, safeProject, reportFilename);
                 const jsonSuccess = await silentWriteFile(jsonDirectoryHandle, jsonFilename, jsonBlob);
                 const reportSuccess = await silentWriteFile(reportDirectoryHandle, reportFilename, reportBlob);
-                
                 if (!jsonSuccess || !reportSuccess) {
                     alert("There was an issue saving directly to the folder. Downloading via browser instead.");
-                    fallbackDownload(jsonFilename, jsonBlob);
-                    fallbackDownload(reportFilename, reportBlob);
+                    fallbackDownload(jsonFilename, jsonBlob); fallbackDownload(reportFilename, reportBlob);
                 }
             } else {
-                fallbackDownload(jsonFilename, jsonBlob);
-                fallbackDownload(reportFilename, reportBlob);
+                fallbackDownload(jsonFilename, jsonBlob); fallbackDownload(reportFilename, reportBlob);
             }
             
-            if (reviewQueue.length > 0) {
-                processNextReview();
-            } else {
-                clearGrades();
-                updateExportButtonUI();
-            }
+            if (reviewQueue.length > 0) { processNextReview(); } 
+            else { clearGrades(); updateExportButtonUI(); }
             
-        } catch (error) {
-            console.error("Export Error", error);
-            alert("An error occurred while generating the files.");
-        }
+        } catch (error) { console.error("Export Error", error); alert("An error occurred while generating the files."); }
     }
 
     async function exportRubricTemplate() {
@@ -1669,9 +1403,7 @@
 
     function escapeHTML(str) {
         if(!str) return '';
-        return str.toString().replace(/[&<>'"]/g, 
-            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-        );
+        return str.toString().replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
     }
 
     window.onload = init;
