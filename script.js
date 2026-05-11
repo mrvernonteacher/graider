@@ -173,6 +173,7 @@ function toggleSetup() {
     const btn = document.getElementById('btnSetup');
     
     isSetupOpen = !isSetupOpen;
+    isEditMode = isSetupOpen; 
     
     setupRot += 180;
     icon.style.transform = `rotate(${setupRot}deg)`;
@@ -181,33 +182,27 @@ function toggleSetup() {
     const overallContainer = document.getElementById('overallCommentsContainer');
 
     if (isSetupOpen) {
-        // Open the menu and FORCE Edit Mode ON
-        isEditMode = true;
-        
+        // FORCE UI OPEN
         wrapper.classList.remove('collapsed'); 
         wrapper.classList.add('open'); 
         btn.classList.add('active');
         
+        // FORCE EDIT MODE ON
         addContainer.style.display = 'block';
         overallContainer.style.display = 'none';
-        
-        // Show Edit elements, hide Grade elements
         document.querySelectorAll('.edit-only').forEach(el => el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex');
         document.querySelectorAll('.grade-only').forEach(el => el.style.display = 'none');
 
         if (isAIOpen) toggleAI(); 
     } else {
-        // Close the menu and FORCE Edit Mode OFF
-        isEditMode = false;
-        
+        // FORCE UI CLOSED
         wrapper.classList.add('collapsed'); 
         wrapper.classList.remove('open'); 
         btn.classList.remove('active');
         
+        // FORCE EDIT MODE OFF
         addContainer.style.display = 'none';
         overallContainer.style.display = 'block';
-        
-        // Hide Edit elements, show Grade elements
         document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.grade-only').forEach(el => el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex');
         
@@ -383,14 +378,20 @@ function init() {
         reader.onload = function(e) {
             try { 
                 currentRubric = JSON.parse(e.target.result); 
-                
-                // If Setup is open, automatically close it (which perfectly toggles all buttons/modes back to normal)
-                if (isSetupOpen) {
-                    toggleSetup(); 
-                } 
-                
                 clearGrades(); 
                 updateMaxScore(); 
+                
+                // Force exit edit mode and visually close the Setup menu if it was open
+                if (isSetupOpen) {
+                    toggleSetup(); 
+                } else {
+                    isEditMode = false;
+                    document.getElementById('addCriterionContainer').style.display = 'none';
+                    document.getElementById('overallCommentsContainer').style.display = 'block';
+                    document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.grade-only').forEach(el => el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex');
+                    renderRubric();
+                }
             } 
             catch (err) { alert('Error parsing Rubric JSON file.'); }
         }; reader.readAsText(file); e.target.value = ""; 
@@ -513,7 +514,7 @@ async function processSingleBatchFile(file) {
                     let totalScore = 0; for (let key in batchScores) { totalScore += batchScores[key]; }
 
                     let safeStudent = bestName.replace(/[^a-z0-9\s]/gi, '_').trim(); let safeProject = (currentRubric.title || "Project").replace(/[^a-z0-9\s]/gi, '_').trim();
-                    let jsonFilename = `${safeStudent} - ${safeProject}.json`; let reportFilename = `${safeStudent} - ${safeProject}.html`;
+                    let jsonFilename = `${safeStudent} - ${safeProject}.json`; let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
 
                     const exportData = { type: "StudentGradeRecord", studentName: bestName, projectTitle: currentRubric.title, rubric: currentRubric, scores: batchScores, comments: batchComments, overallComment: "", isGraded: batchGraded };
                     const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -836,9 +837,30 @@ function generateStandaloneReport(studentName, projectTitle, totalScore) {
 }
 
 async function exportStudentDataAndReport() {
-    let studentName = document.getElementById('studentName').value.trim();
     
-    if (isSetupOpen) toggleSetup();
+    // Check directory FIRST before running any alerts so the browser doesn't block the file picker!
+    if (!reportDirectoryHandle) {
+        try {
+            await selectSaveDirectory();
+        } catch(e) {
+            return;
+        }
+        if (!reportDirectoryHandle) return; 
+    }
+
+    let studentName = document.getElementById('studentName').value.trim();
+    let missingGrades = [];
+    currentRubric.criteria.forEach((crit, idx) => { if (!isGraded[idx]) { missingGrades.push(crit.name); } });
+
+    if (!studentName || missingGrades.length > 0) {
+        let warningMsg = "Hold on! You have missing information:\n\n";
+        if (!studentName) warningMsg += "• Student/Group Name is blank\n";
+        if (missingGrades.length > 0) { warningMsg += "• Unscored Categories:\n   - " + missingGrades.join("\n   - ") + "\n"; }
+        warningMsg += "\nDo you want to export the incomplete grade anyway?";
+        if (!confirm(warningMsg)) { return; }
+    }
+
+    if(isSetupOpen) toggleSetup();
 
     let safeStudent = studentName ? studentName.replace(/[^a-z0-9\s]/gi, '_').trim() : "Unnamed";
     let projectTitle = currentRubric.title || "Untitled Project";
@@ -846,7 +868,7 @@ async function exportStudentDataAndReport() {
     let totalScore = document.getElementById('totalScore').innerText;
 
     let jsonFilename = `${safeStudent} - ${safeProject}.json`;
-    let reportFilename = `${safeStudent} - ${safeProject}.html`;
+    let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
 
     const exportData = { type: "StudentGradeRecord", studentName: studentName, projectTitle: projectTitle, rubric: currentRubric, scores: scores, comments: comments, overallComment: overallComment, isGraded: isGraded };
     const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -854,16 +876,9 @@ async function exportStudentDataAndReport() {
     const reportBlob = new Blob([htmlReportString], { type: 'text/html' });
 
     try {
-        if (reportDirectoryHandle && jsonDirectoryHandle) {
-            await cleanupOldReports(reportDirectoryHandle, safeStudent, safeProject, reportFilename);
-            const jsonSuccess = await silentWriteFile(jsonDirectoryHandle, jsonFilename, jsonBlob);
-            const reportSuccess = await silentWriteFile(reportDirectoryHandle, reportFilename, reportBlob);
-            if (!jsonSuccess || !reportSuccess) {
-                fallbackDownload(jsonFilename, jsonBlob); fallbackDownload(reportFilename, reportBlob);
-            }
-        } else {
-            fallbackDownload(jsonFilename, jsonBlob); fallbackDownload(reportFilename, reportBlob);
-        }
+        await cleanupOldReports(reportDirectoryHandle, safeStudent, safeProject, reportFilename);
+        await silentWriteFile(jsonDirectoryHandle, jsonFilename, jsonBlob);
+        await silentWriteFile(reportDirectoryHandle, reportFilename, reportBlob);
         
         if (reviewQueue.length > 0) { processNextReview(); } 
         else { clearGrades(); updateExportButtonUI(); }
