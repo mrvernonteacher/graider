@@ -333,7 +333,7 @@
             display: flex; align-items: center; gap: 8px; font-family: inherit;
         }
         #smartFillBtn.visible { bottom: 40px; opacity: 1; }
-        #smartFillBtn:hover { transform: translateY(-3px) scale(1.02); background-color: var(--primary); }
+        #smartFillBtn:hover { transform: translateY(-3px) scale(1.02); background-color: var(--success); }
         [data-theme="dark"] #smartFillBtn { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
         [data-theme="dark"] #smartFillBtn:hover { background-color: rgba(16, 185, 129, 0.3); }
 
@@ -718,7 +718,6 @@
         const btn = document.getElementById('btnSetup');
         
         isSetupOpen = !isSetupOpen;
-        isEditMode = isSetupOpen; 
         
         setupRot += 180;
         icon.style.transform = `rotate(${setupRot}deg)`;
@@ -729,7 +728,6 @@
         if (isSetupOpen) {
             wrapper.classList.remove('collapsed'); wrapper.classList.add('open'); btn.classList.add('active');
             
-            // Automatically enter edit mode when Setup opens
             if (!isEditMode) {
                 isEditMode = true;
                 document.getElementById('addCriterionContainer').style.display = 'block';
@@ -741,7 +739,6 @@
         } else {
             wrapper.classList.add('collapsed'); wrapper.classList.remove('open'); btn.classList.remove('active');
             
-            // Automatically exit edit mode when Setup closes
             if (isEditMode) {
                 isEditMode = false;
                 document.getElementById('addCriterionContainer').style.display = 'none';
