@@ -166,16 +166,38 @@ let comments = {};
 let isGraded = {}; 
 let overallComment = "";
 
+// --- FAQ HELP MODAL LOGIC ---
+function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
+function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
+
 // --- UI TOGGLE LOGIC ---
+function setEditMode(state) {
+    isEditMode = state;
+    const addContainer = document.getElementById('addCriterionContainer');
+    const overallContainer = document.getElementById('overallCommentsContainer');
+    
+    if (isEditMode) {
+        if (addContainer) addContainer.style.display = 'block';
+        if (overallContainer) overallContainer.style.display = 'none';
+        document.querySelectorAll('.edit-only').forEach(el => { el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex'; });
+        document.querySelectorAll('.grade-only').forEach(el => { el.style.display = 'none'; });
+    } else {
+        if (addContainer) addContainer.style.display = 'none';
+        if (overallContainer) overallContainer.style.display = 'block';
+        document.querySelectorAll('.edit-only').forEach(el => { el.style.display = 'none'; });
+        document.querySelectorAll('.grade-only').forEach(el => { el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex'; });
+        updateMaxScore();
+    }
+    
+    renderRubric();
+}
+
 function toggleSetup() {
     isSetupOpen = !isSetupOpen;
-    isEditMode = isSetupOpen; 
     
     const wrapper = document.getElementById('setupWrapper');
     const icon = document.getElementById('gearIcon');
     const btn = document.getElementById('btnSetup');
-    const addContainer = document.getElementById('addCriterionContainer');
-    const overallContainer = document.getElementById('overallCommentsContainer');
 
     if (icon) {
         setupRot += 180;
@@ -183,39 +205,25 @@ function toggleSetup() {
     }
 
     if (isSetupOpen) {
-        // FORCE UI OPEN
         if(wrapper) { wrapper.classList.remove('collapsed'); wrapper.classList.add('open'); }
         if(btn) btn.classList.add('active');
-        if(addContainer) addContainer.style.display = 'block';
-        if(overallContainer) overallContainer.style.display = 'none';
-        
-        document.querySelectorAll('.edit-only').forEach(el => { el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex'; });
-        document.querySelectorAll('.grade-only').forEach(el => { el.style.display = 'none'; });
-
         if (isAIOpen) toggleAI(); 
+        setEditMode(true); 
     } else {
-        // FORCE UI CLOSED
         if(wrapper) { wrapper.classList.add('collapsed'); wrapper.classList.remove('open'); }
         if(btn) btn.classList.remove('active');
-        if(addContainer) addContainer.style.display = 'none';
-        if(overallContainer) overallContainer.style.display = 'block';
-        
-        document.querySelectorAll('.edit-only').forEach(el => { el.style.display = 'none'; });
-        document.querySelectorAll('.grade-only').forEach(el => { el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex'; });
-        
-        try { updateMaxScore(); } catch(e) {}
+        setEditMode(false); 
     }
     
-    try { renderRubric(); } catch(e) {}
-    try { handleScrollForFloatBtn(); } catch(e) {}
+    handleScrollForFloatBtn();
 }
 
 function toggleAI() {
+    isAIOpen = !isAIOpen;
+    
     const wrapper = document.getElementById('aiWrapper');
     const icon = document.getElementById('robotIcon');
     const btn = document.getElementById('btnAI');
-    
-    isAIOpen = !isAIOpen;
 
     if (isAIOpen) {
         if(wrapper) { wrapper.classList.remove('collapsed'); wrapper.classList.add('open'); }
@@ -242,6 +250,28 @@ function toggleTheme() {
     }
 }
 
+function checkExportReady() {
+    const btn = document.getElementById('exportMainBtn');
+    if (!btn) return;
+    
+    let allGraded = true;
+    if (!currentRubric || !currentRubric.criteria || currentRubric.criteria.length === 0) {
+        allGraded = false;
+    } else {
+        currentRubric.criteria.forEach((crit, idx) => {
+            if (!isGraded[idx]) allGraded = false;
+        });
+    }
+    
+    const studentName = document.getElementById('studentName').value.trim();
+    
+    if (allGraded && studentName !== "" && !isEditMode && reviewQueue.length === 0) {
+        btn.classList.add('export-ready');
+    } else {
+        btn.classList.remove('export-ready');
+    }
+}
+
 // --- TEACH AI MODAL LOGIC ---
 let teachDocFile = null;
 let teachJsonFile = null;
@@ -253,10 +283,6 @@ function openTeachModal() {
 }
 
 function closeTeachModal() { document.getElementById('teachModal').style.display = 'none'; }
-
-// --- FAQ HELP MODAL LOGIC ---
-function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
-function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
 
 function resetTeachDropZones() {
     teachDocFile = null; teachJsonFile = null;
@@ -369,6 +395,10 @@ function init() {
         if(icon) icon.innerText = 'dark_mode'; 
     }
 
+    // Attach student name listener for glowing button effect
+    const studentNameInput = document.getElementById('studentName');
+    if(studentNameInput) studentNameInput.addEventListener('input', checkExportReady);
+
     updateMaxScore(); clearGrades(); updateExportButtonUI();
     window.addEventListener('scroll', handleScrollForFloatBtn);
     
@@ -382,15 +412,10 @@ function init() {
             try { 
                 currentRubric = JSON.parse(e.target.result); 
                 
-                // If Setup is open, automatically close it (which repaints the UI into grade mode)
                 if (isSetupOpen) {
                     toggleSetup(); 
                 } else {
-                    isEditMode = false;
-                    document.getElementById('addCriterionContainer').style.display = 'none';
-                    document.getElementById('overallCommentsContainer').style.display = 'block';
-                    document.querySelectorAll('.edit-only').forEach(el => el.style.display = 'none');
-                    document.querySelectorAll('.grade-only').forEach(el => el.style.display = el.tagName === 'DIV' ? 'flex' : 'inline-flex');
+                    setEditMode(false);
                 }
                 
                 clearGrades(); 
@@ -412,6 +437,7 @@ function init() {
                     const ocInput = document.getElementById('overallCommentsInput');
                     if (ocInput) { ocInput.value = overallComment; ocInput.style.height = 'auto'; ocInput.style.height = ocInput.scrollHeight + 'px'; }
                     updateMaxScore(); renderRubric();
+                    checkExportReady();
                 } else { alert('Invalid student data file.'); }
             } catch (err) { alert('Error parsing Student JSON file.'); }
         }; reader.readAsText(file); e.target.value = ""; 
@@ -487,6 +513,7 @@ async function processNextReview() {
                     updateRowComment(g.criterionIndex, { value: g.comment });
                 });
                 renderRubric(); 
+                checkExportReady();
             } else throw new Error("AI missed the grading format.");
         } catch (err) { console.error(err); alert(`Grading failed for ${file.name}!\n\n` + err.message); } 
         finally { document.getElementById('loadingOverlay').style.display = 'none'; }
@@ -550,9 +577,11 @@ function updateExportButtonUI() {
     if (reviewQueue.length > 0) {
         btn.innerHTML = `<span class="material-symbols-outlined">save</span> Save & Next (${reviewQueue.length})`;
         btn.classList.remove('btn-success'); btn.classList.add('btn-purple');
+        btn.classList.remove('export-ready');
     } else {
         btn.innerHTML = `<span class="material-symbols-outlined">sim_card_download</span> Export`;
         btn.classList.remove('btn-purple'); btn.classList.add('btn-success');
+        checkExportReady();
     }
 }
 
@@ -576,6 +605,7 @@ function autoFillMaxPoints() {
             if (maxIdx !== -1) selectScore(i, maxIdx, maxPts);
         }
     }
+    checkExportReady();
 }
 
 function updateMaxScore() {
@@ -676,6 +706,7 @@ function renderRubric() {
     if (!isEditMode) {
         updateTotalDisplay();
         document.querySelectorAll('.comments-input').forEach(ta => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; });
+        checkExportReady();
     }
 }
 
@@ -721,6 +752,7 @@ function selectScore(critIndex, levelIndex, points) {
     document.getElementById(`score-input-${critIndex}`).value = points;
     scores[critIndex] = parseFloat(points);
     updateTotalDisplay();
+    checkExportReady();
 }
 
 function manualScoreUpdate(critIndex, value) {
@@ -731,6 +763,7 @@ function manualScoreUpdate(critIndex, value) {
         if(cell) cell.classList.remove('selected');
     });
     updateTotalDisplay();
+    checkExportReady();
 }
 
 function updateRowComment(critIndex, element) { comments[critIndex] = element.value; if(element.style) { element.style.height = 'auto'; element.style.height = element.scrollHeight + 'px'; } }
@@ -744,6 +777,7 @@ function clearGrades() {
     const ocInput = document.getElementById('overallCommentsInput');
     if (ocInput) { ocInput.value = ""; ocInput.style.height = 'auto'; }
     renderRubric(); window.scrollTo(0, 0); 
+    checkExportReady();
 }
 
 async function selectSaveDirectory() {
@@ -846,7 +880,8 @@ function generateStandaloneReport(studentName, projectTitle, totalScore) {
 }
 
 async function exportStudentDataAndReport() {
-    // 1. Force Folder Selection First (Avoids Browser Security Block)
+    
+    // Check directory FIRST before running any alerts so the browser doesn't block the file picker!
     if (!reportDirectoryHandle) {
         try {
             await selectSaveDirectory();
@@ -856,7 +891,6 @@ async function exportStudentDataAndReport() {
         if (!reportDirectoryHandle) return; 
     }
 
-    // 2. Validate Data
     let studentName = document.getElementById('studentName').value.trim();
     let missingGrades = [];
     currentRubric.criteria.forEach((crit, idx) => { if (!isGraded[idx]) { missingGrades.push(crit.name); } });
@@ -876,7 +910,6 @@ async function exportStudentDataAndReport() {
     let safeProject = projectTitle.replace(/[^a-z0-9\s]/gi, '_').trim();
     let totalScore = document.getElementById('totalScore').innerText;
 
-    // 3. Inject Score into Filenames
     let jsonFilename = `${safeStudent} - ${safeProject}.json`;
     let reportFilename = `${safeStudent} - ${safeProject} - ${totalScore}.html`;
 
