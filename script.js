@@ -254,6 +254,10 @@ function openTeachModal() {
 
 function closeTeachModal() { document.getElementById('teachModal').style.display = 'none'; }
 
+// --- FAQ HELP MODAL LOGIC ---
+function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
+function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
+
 function resetTeachDropZones() {
     teachDocFile = null; teachJsonFile = null;
     const dzDoc = document.getElementById('dropZoneDoc');
