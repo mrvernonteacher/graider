@@ -155,7 +155,47 @@
 </div>
 
 <button id="smartFillBtn" onclick="autoFillMaxPoints()" title="Fills max points for all blank rows above your furthest graded row"><span class="material-symbols-outlined">check_circle</span> Fill Max Down To Here</button>
+<button id="askGraiderBtn" onclick="openHelpModal()" title="Ask GrAIder">
+    <span class="material-symbols-outlined">support_agent</span>
+</button>
 
+<div id="helpModal" class="modal-overlay">
+    <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+        <h3><span class="material-symbols-outlined">support_agent</span> Ask GrAIder FAQ</h3>
+        <p style="font-size: 0.9em; color: var(--text-light); margin-bottom: 20px;">Click on any question below to learn how to master the GrAIder app.</p>
+        
+        <div class="faq-container">
+            <details class="faq-item">
+                <summary>How do I connect my Master Save Folder?</summary>
+                <div class="faq-answer">Click the <strong>Setup</strong> button at the top, then click <strong>Set Save Folder</strong>. Select a folder on your computer where you want all JSON data and HTML reports to be automatically saved. You must do this before running a Batch Grade.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>What is the difference between Review GrAIder and Batch GrAIder?</summary>
+                <div class="faq-answer"><strong>Review GrAIder</strong> lets you upload a batch of PDFs but holds them in a queue so you can review and manually adjust the scores one-by-one before saving. <br><br><strong>Batch GrAIder</strong> processes the entire stack of PDFs completely silently in the background and drops the final graded HTML reports directly into your Master Save Folder.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>How do I edit the Rubric?</summary>
+                <div class="faq-answer">Click the <strong>Setup</strong> button at the top. This will automatically force the table into Edit Mode where you can add rows, change points, and edit descriptions. Close the Setup menu to lock the rubric back into grading mode.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>What does the "Teach GrAIder" button do?</summary>
+                <div class="faq-answer">If the AI is missing nuances in your grading, you can upload a previous student's PDF alongside their graded JSON file. The app will study the pair to learn exactly *why* you gave the grades you did, and extract permanent rules to apply to future grading!</div>
+            </details>
+            
+            <details class="faq-item">
+                <summary>How do I save my rubric for next year?</summary>
+                <div class="faq-answer">Open the <strong>Setup</strong> menu and click <strong>Save Template</strong>. This will download a JSON file containing all your criteria, manual AI instructions, and extracted rules. Next year, just click <strong>Load Template</strong> to bring it all back!</div>
+            </details>
+        </div>
+
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="btn-info" onclick="closeHelpModal()"><span class="material-symbols-outlined">close</span> Close Help</button>
+        </div>
+    </div>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
