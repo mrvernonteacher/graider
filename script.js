@@ -311,7 +311,8 @@ function setupDropZone(zoneId, inputId, expectedType) {
 
 function handleTeachFile(file, zone, type) {
     if (type === 'doc') {
-        if (!file.name.match(/\.(pdf|png|jpg|jpeg)$/i)) { alert("Please upload a PDF or Image."); return; }
+        // ADDED HTML TO THE ALLOWED FORMATS REGEX HERE
+        if (!file.name.match(/\.(pdf|png|jpg|jpeg|html)$/i)) { alert("Please upload a PDF, Image, or HTML file."); return; }
         teachDocFile = file;
         zone.innerHTML = "<span class='material-symbols-outlined'>check_circle</span> " + file.name.substring(0, 20) + "...";
     } else {
