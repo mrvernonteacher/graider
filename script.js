@@ -311,7 +311,6 @@ function setupDropZone(zoneId, inputId, expectedType) {
 
 function handleTeachFile(file, zone, type) {
     if (type === 'doc') {
-        // ADDED HTML TO THE ALLOWED FORMATS REGEX HERE
         if (!file.name.match(/\.(pdf|png|jpg|jpeg|html)$/i)) { alert("Please upload a PDF, Image, or HTML file."); return; }
         teachDocFile = file;
         zone.innerHTML = "<span class='material-symbols-outlined'>check_circle</span> " + file.name.substring(0, 20) + "...";
@@ -840,8 +839,9 @@ function generateStandaloneReport(studentName, projectTitle, totalScore) {
     .overall-comments { margin-top: 30px; background: #f9f9fb; padding: 20px; border-radius: 6px; border-left: 5px solid #002f6c; border: 1px solid #bdc3c7; border-left-width: 5px; position: relative; z-index: 1; }
     .overall-comments h3 { color: #002f6c; margin-top: 0; margin-bottom: 15px; }
     .overall-comments div { white-space: pre-wrap; }
+    
     @media print {
-        @page { size: landscape; margin: 0.5in; }
+        @page { margin: 0.5in; }
         body { padding: 0; margin: 0; max-width: 100%; }
         .header { padding-bottom: 10px; margin-bottom: 15px; }
         h1 { font-size: 1.6em; margin-bottom: 5px; }
@@ -889,14 +889,12 @@ function generateStandaloneReport(studentName, projectTitle, totalScore) {
     return html;
 }
 
-// NEW STUDENT RUBRIC EXPORT
-function exportCleanRubric() {
+// REFRACTORED: Now returns a clean HTML string instead of downloading it directly
+function getCleanRubricHTML() {
     let maxCols = 0;
     if (currentRubric.criteria.length > 0) { maxCols = Math.max(...currentRubric.criteria.map(c => c.levels.length)); }
 
     let projectTitle = currentRubric.title || "Untitled Project";
-    let safeProject = projectTitle.replace(/[^a-z0-9\s]/gi, '_').trim();
-    let filename = `${safeProject} - Rubric.html`;
 
     let html = `<!DOCTYPE html>
 <html lang="en">
@@ -915,7 +913,7 @@ function exportCleanRubric() {
     .level-title { font-weight: bold; color: #002f6c; display: block; margin-bottom: 5px; }
     
     @media print {
-        @page { size: landscape; margin: 0.5in; }
+        @page { margin: 0.5in; }
         body { padding: 0; margin: 0; max-width: 100%; }
         .header { padding-bottom: 10px; margin-bottom: 15px; }
         h1 { font-size: 1.6em; margin-bottom: 5px; }
@@ -947,8 +945,49 @@ function exportCleanRubric() {
     });
     html += `</table></body></html>`;
 
-    const blob = new Blob([html], { type: 'text/html' });
-    fallbackDownload(filename, blob);
+    return html;
+}
+
+// NEW INVISIBLE DIRECT PRINT PROTOCOL
+function printRubric() {
+    let studentName = document.getElementById('studentName').value.trim();
+    let projectTitle = currentRubric.title || "Untitled Project";
+    let totalScore = document.getElementById('totalScore').innerText;
+    
+    // Check if any grades have been assigned
+    let hasGrades = Object.values(isGraded).some(v => v === true);
+    let htmlToPrint;
+    
+    // SMART PRINT: If completely blank, print the clean version. Otherwise, print the graded report.
+    if (!hasGrades && studentName === "") {
+        htmlToPrint = getCleanRubricHTML();
+    } else {
+        if (!studentName) studentName = "Student";
+        htmlToPrint = generateStandaloneReport(studentName, projectTitle, totalScore);
+    }
+
+    // Build the invisible iframe to hijack the print protocol
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+    
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(htmlToPrint);
+    iframe.contentWindow.document.close();
+
+    // Give the browser a split-second to render fonts/tables before firing the print dialog
+    setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        
+        // Clean up the DOM after printing
+        setTimeout(() => { document.body.removeChild(iframe); }, 2000);
+    }, 250);
 }
 
 async function exportStudentDataAndReport() {
