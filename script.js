@@ -841,11 +841,22 @@ function generateStandaloneReport(studentName, projectTitle, totalScore) {
     .overall-comments h3 { color: #002f6c; margin-top: 0; margin-bottom: 15px; }
     .overall-comments div { white-space: pre-wrap; }
     @media print {
-        body { padding: 0; max-width: 100%; }
-        table { page-break-inside: auto; }
+        @page { size: landscape; margin: 0.5in; }
+        body { padding: 0; margin: 0; max-width: 100%; }
+        .header { padding-bottom: 10px; margin-bottom: 15px; }
+        h1 { font-size: 1.6em; margin-bottom: 5px; }
+        h2 { font-size: 1.2em; margin-bottom: 5px; }
+        .total-score { font-size: 1.4em; margin-top: 5px; }
+        table { page-break-inside: auto; margin-bottom: 0; }
         tr { page-break-inside: avoid; page-break-after: auto; }
-        .selected { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .crit-title, .score-col, .level-pts, .comment-box, .overall-comments { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        th, td { padding: 6px 8px; font-size: 0.8em; line-height: 1.3; }
+        .crit-title { width: 12%; font-size: 0.85em; }
+        .level-pts { padding: 1px 4px; margin-bottom: 3px; font-size: 0.8em; }
+        .score-col { font-size: 1em; width: 60px; }
+        .comment-row td { padding: 8px; }
+        .comment-box { padding: 8px 10px; font-size: 0.85em; }
+        .overall-comments { margin-top: 15px; padding: 12px; }
+        .selected, .crit-title, .score-col, .level-pts, .comment-box, .overall-comments { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
 </style>
 </head>
@@ -902,6 +913,20 @@ function exportCleanRubric() {
     .crit-title { font-weight: bold; width: 15%; background-color: #eef2f7; color: #002f6c; }
     .level-pts { color: #c8102e; font-weight: bold; display: block; margin-bottom: 5px; background: #f9f9fb; border: 1px solid #bdc3c7; padding: 2px 6px; border-radius: 4px; display: inline-block; }
     .level-title { font-weight: bold; color: #002f6c; display: block; margin-bottom: 5px; }
+    
+    @media print {
+        @page { size: landscape; margin: 0.5in; }
+        body { padding: 0; margin: 0; max-width: 100%; }
+        .header { padding-bottom: 10px; margin-bottom: 15px; }
+        h1 { font-size: 1.6em; margin-bottom: 5px; }
+        p { display: none; }
+        table { page-break-inside: auto; margin-bottom: 0; }
+        tr { page-break-inside: avoid; page-break-after: auto; }
+        th, td { padding: 6px 8px; font-size: 0.8em; line-height: 1.3; }
+        .crit-title { width: 12%; font-size: 0.85em; }
+        .level-pts { padding: 1px 4px; margin-bottom: 3px; font-size: 0.8em; }
+        .level-pts, .level-title, .crit-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
 </style>
 </head>
 <body>
